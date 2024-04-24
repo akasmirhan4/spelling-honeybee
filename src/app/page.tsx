@@ -20,7 +20,7 @@ export default async function Home() {
         <div className="flex flex-col gap-4">
           <Link
             className="flex min-w-64 max-w-xs flex-col rounded-full bg-black p-8 text-center text-white transition-all ease-out hover:bg-black/80"
-            href="#"
+            href="/play"
             target="_self"
           >
             <h3 className="text-2xl font-bold">Play</h3>
