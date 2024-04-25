@@ -1,5 +1,5 @@
 import { Progress } from "../_components/progress";
-import { GameDisplay } from "../_components/game-display";
+import { MainGame } from "../_components/main-game";
 
 export default async function Play() {
   return (
@@ -7,7 +7,7 @@ export default async function Play() {
       <div className="flex flex-1">
         <div className="flex flex-1 flex-col items-center">
           {/* input */}
-          <GameDisplay />
+          <MainGame />
         </div>
         <div className="flex flex-1 flex-col">
           <Progress />

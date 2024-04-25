@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { GameInput } from "./game-input";
 import { LettersGrid } from "./letters-grid";
+import { api } from "~/trpc/react";
 
-export function GameDisplay() {
+export function MainGame() {
   const [textInput, setTextInput] = useState("HONEYBEES");
   const specialLetter = "Y";
   const [usableLetter, setUsableLetter] = useState([
@@ -15,6 +16,8 @@ export function GameDisplay() {
     "O",
     "S",
   ]);
+  const mutation = api.dictionary.isWordExist.useMutation();
+
   // if textinput is longer than 19, alert window
   useEffect(() => {
     if (textInput.length >= 19) {
@@ -23,10 +26,16 @@ export function GameDisplay() {
     }
   }, [textInput]);
 
-  const onSubmitWord = () => {
-    alert("You have submitted the word: " + textInput);
+  const onSubmitWord = async () => {
+    const dictionary = await mutation.mutateAsync({ word: textInput });
+    if (dictionary.isExist) {
+      console.log(textInput + " exist in dictionary");
+    }
+    else{
+      console.log(textInput + " does not exist in dictionary");
+    }
     setTextInput("");
-  }
+  };
 
   return (
     <>
@@ -56,7 +65,7 @@ export function GameDisplay() {
             setUsableLetter(shuffled);
           }}
         />
-        <CustomButton text="Enter" onClick={onSubmitWord}/>
+        <CustomButton text="Enter" onClick={onSubmitWord} />
       </div>
     </>
   );
