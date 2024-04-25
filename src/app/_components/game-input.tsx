@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // special input
 export function GameInput() {
-  const [textInput, setTextInput] = useState("haneybees");
+  const [textInput, setTextInput] = useState("honeybees");
   const [isPageFocused, setIsPageFocused] = useState(true);
   //   special letter
   const specialLetter = "Y";
@@ -41,7 +41,7 @@ export function GameInput() {
               ? "text-primary"
               : usableLetter.includes(letter.toUpperCase())
                 ? "text-black"
-                : "text-[#dcdcdc]"
+                : "text-grey"
           }`}
         >
           {letter}
@@ -49,7 +49,7 @@ export function GameInput() {
       ))}
       {/* blink */}
       <span
-        className={`animate-blink ml-[1px] h-full w-[0.25rem] ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
+        className={`animate-blink ml-[1px] min-h-[3rem] h-full w-[0.25rem] ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
       />
     </div>
   );

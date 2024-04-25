@@ -1,17 +1,25 @@
-import { useState } from "react";
 import { GameInput } from "../_components/game-input";
+import { LettersGrid } from "../_components/letters-grid";
+import { Progress } from "../_components/progress";
 
 export default async function Play() {
   return (
     <main className="flex min-h-screen flex-col bg-white text-black">
       <div className="flex flex-1">
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col items-center">
           {/* input */}
           <GameInput />
+          <LettersGrid />
         </div>
-        <div className="flex flex-1"></div>
+        <div className="flex flex-1 flex-col">
+          <Progress />
+
+          {/* word list */}
+          <div className="border-gray mr-10 flex flex-1 flex-col rounded-md border">
+            <h3 className="px-6 py-4">You have found 1 word</h3>
+          </div>
+        </div>
       </div>
     </main>
   );
 }
-

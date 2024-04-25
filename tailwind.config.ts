@@ -9,7 +9,8 @@ export default {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       colors:{
-        primary: "rgb(247, 218, 33)"
+        primary: "rgb(247, 218, 33)",
+        grey: "#dcdcdc"
       },
       animation: {
         blink: 'blink 1s step-end infinite',
