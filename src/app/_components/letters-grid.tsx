@@ -78,14 +78,14 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
 
 type LettersGridProps = {
   onLetterClick?: (letter: string) => void;
+  specialLetter: string;
+  usableLetter: string[];
 };
 
-export function LettersGrid({ onLetterClick }: LettersGridProps) {
-  const specialLetter = "Y";
-  const usableLetter = ["H", "B", "N", "E", "O", "S"];
+export function LettersGrid({ onLetterClick, specialLetter, usableLetter }: LettersGridProps) {
 
   return (
-    <div className="flex h-full w-80 flex-col align-middle">
+    <div className="flex mb-12 w-80 flex-col align-middle">
       <div className="relative w-full pb-[100%] text-black">
         {
           // create svg for special letter

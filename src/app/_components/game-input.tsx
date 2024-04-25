@@ -5,42 +5,47 @@ import { useEffect, useState } from "react";
 type GameInputProps = {
   textInput: string;
   onTextInput: (text: string) => void;
+  specialLetter: string;
+  usableLetter: string[];
+  onSubmitWord?: () => void;
 };
 // special input
-export function GameInput({ textInput, onTextInput }: GameInputProps) {
+export function GameInput({
+  textInput,
+  onTextInput,
+  specialLetter,
+  usableLetter,
+  onSubmitWord,
+}: GameInputProps) {
   const [isPageFocused, setIsPageFocused] = useState(true);
-  //   special letter
-  const specialLetter = "Y";
-  const usableLetter = ["H", "B", "N", "E", "O", "S"];
-  const [fontSize, setFontSize] = useState("text-5xl")
+  const [fontSize, setFontSize] = useState("text-5xl");
 
   //   handle keypress
   const handleKeyPress = (e: KeyboardEvent) => {
     // if backspace, remove last letter
     if (e.key === "Backspace") {
       onTextInput(textInput.slice(0, -1));
-    }    
+    }
     // else if alphabet not others
-    else if (usableLetter.includes(e.key.toUpperCase())) {
-      onTextInput(textInput + e.key);
+    else if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+      onTextInput(textInput + e.key.toUpperCase());
+    }
+    // if enter, submit word
+    else if (e.key === "Enter") {
+      onSubmitWord && onSubmitWord();
     }
   };
 
   useEffect(() => {
-    console.log(textInput.length)
     // change font size to smaller if textinput is longer than 10
-
     if (textInput.length >= 15) {
-      setFontSize("text-3xl")
+      setFontSize("text-3xl");
+    } else if (textInput.length >= 10) {
+      setFontSize("text-4xl");
+    } else {
+      setFontSize("text-5xl");
     }
-    else if (textInput.length >= 10) {
-        setFontSize("text-4xl")
-      }
-    else {
-      setFontSize("text-5xl")
-    }
-  }, [textInput])
-  
+  }, [textInput]);
 
   // check if page is focused
   window.onfocus = () => setIsPageFocused(true);
