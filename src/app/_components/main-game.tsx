@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { GameInput } from "./game-input";
 import { LettersGrid } from "./letters-grid";
 import { api } from "~/trpc/react";
+import { Progress } from "./progress";
+import { WordList } from "./word-list";
 
 export function MainGame() {
   const [textInput, setTextInput] = useState("HONEYBEES");
@@ -30,44 +32,53 @@ export function MainGame() {
     const dictionary = await mutation.mutateAsync({ word: textInput });
     if (dictionary.isExist) {
       console.log(textInput + " exist in dictionary");
-    }
-    else{
+    } else {
       console.log(textInput + " does not exist in dictionary");
     }
     setTextInput("");
   };
 
   return (
-    <>
-      <GameInput
-        textInput={textInput}
-        onTextInput={setTextInput}
-        specialLetter={specialLetter}
-        usableLetter={usableLetter}
-        onSubmitWord={onSubmitWord}
-      />
-      <LettersGrid
-        specialLetter={specialLetter}
-        usableLetter={usableLetter}
-        onLetterClick={(letter) => setTextInput(textInput + letter)}
-      />
-      <div className="flex gap-3">
-        <CustomButton
-          text="Delete"
-          onClick={() => {
-            setTextInput("");
-          }}
+    <div className="flex container">
+      <div className="flex flex-1 flex-col items-center">
+        <GameInput
+          textInput={textInput}
+          onTextInput={setTextInput}
+          specialLetter={specialLetter}
+          usableLetter={usableLetter}
+          onSubmitWord={onSubmitWord}
         />
-        <CustomIconButton
-          icon="imgs/shuffle.svg"
-          onClick={() => {
-            const shuffled = [...usableLetter].sort(() => Math.random() - 0.5);
-            setUsableLetter(shuffled);
-          }}
+        <LettersGrid
+          specialLetter={specialLetter}
+          usableLetter={usableLetter}
+          onLetterClick={(letter) => setTextInput(textInput + letter)}
         />
-        <CustomButton text="Enter" onClick={onSubmitWord} />
+        <div className="flex gap-3">
+          <CustomButton
+            text="Delete"
+            onClick={() => {
+              setTextInput(textInput.slice(0, -1));
+            }}
+          />
+          <CustomIconButton
+            icon="imgs/shuffle.svg"
+            onClick={() => {
+              const shuffled = [...usableLetter].sort(
+                () => Math.random() - 0.5,
+              );
+              setUsableLetter(shuffled);
+            }}
+          />
+          <CustomButton text="Enter" onClick={onSubmitWord} />
+        </div>
       </div>
-    </>
+      <div className="flex flex-1 flex-col">
+        <Progress />
+
+        {/* word list */}
+        <WordList words={[]} />
+      </div>
+    </div>
   );
 }
 
