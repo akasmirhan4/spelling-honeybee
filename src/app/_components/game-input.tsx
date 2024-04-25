@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 
+type GameInputProps = {
+  textInput: string;
+  onTextInput: (text: string) => void;
+};
 // special input
-export function GameInput() {
-  const [textInput, setTextInput] = useState("honeybees");
+export function GameInput({ textInput, onTextInput }: GameInputProps) {
   const [isPageFocused, setIsPageFocused] = useState(true);
   //   special letter
   const specialLetter = "Y";
@@ -14,11 +17,11 @@ export function GameInput() {
   const handleKeyPress = (e: KeyboardEvent) => {
     // if backspace, remove last letter
     if (e.key === "Backspace") {
-      setTextInput((prev) => prev.slice(0, -1));
-    }
+      onTextInput(textInput.slice(0, -1));
+    }    
     // else if alphabet not others
-    else if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
-      setTextInput((prev) => prev + e.key);
+    else if (usableLetter.includes(e.key.toUpperCase())) {
+      onTextInput(textInput + e.key);
     }
   };
 
@@ -49,7 +52,7 @@ export function GameInput() {
       ))}
       {/* blink */}
       <span
-        className={`animate-blink ml-[1px] min-h-[3rem] h-full w-[0.25rem] ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
+        className={`animate-blink ml-[1px] h-full min-h-[3rem] w-[0.25rem] ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
       />
     </div>
   );

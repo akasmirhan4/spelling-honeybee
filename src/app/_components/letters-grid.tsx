@@ -3,15 +3,13 @@
 import { on } from "events";
 import { useState } from "react";
 
-function Grid({
-  letter,
-  nthChild,
-  handleClick,
-}: {
+type GridProps = {
   letter: string;
   nthChild: number;
   handleClick?: (letter: string) => void;
-}): JSX.Element {
+};
+
+function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
   const transformChilds = [
     "translate(0,0)",
     "translate(-75%, -50%)",
@@ -33,9 +31,8 @@ function Grid({
       onMouseUp={() => {
         setOnMouseDown(false);
       }}
-      onMouseLeave={()=>{
+      onMouseLeave={() => {
         setOnMouseDown(false);
-      
       }}
     >
       <svg
@@ -58,7 +55,7 @@ function Grid({
               ? "scale3d(0.86, 0.86, 1)"
               : "scale3d(1, 1, 1)",
             transition: "all ease-out 0.1s",
-            transformOrigin: "center center"
+            transformOrigin: "center center",
           }}
         />
         <text
@@ -79,7 +76,11 @@ function Grid({
   );
 }
 
-export function LettersGrid() {
+type LettersGridProps = {
+  onLetterClick?: (letter: string) => void;
+};
+
+export function LettersGrid({ onLetterClick }: LettersGridProps) {
   const specialLetter = "Y";
   const usableLetter = ["H", "B", "N", "E", "O", "S"];
 
@@ -88,12 +89,22 @@ export function LettersGrid() {
       <div className="relative w-full pb-[100%] text-black">
         {
           // create svg for special letter
-          <Grid key={0} letter={specialLetter} nthChild={0} />
+          <Grid
+            key={0}
+            letter={specialLetter}
+            nthChild={0}
+            handleClick={onLetterClick}
+          />
         }
         {
           // create svg for each letter in usable letter and special letter.
           usableLetter.map((letter, i) => (
-            <Grid key={i + 1} letter={letter} nthChild={i + 1} />
+            <Grid
+              key={i + 1}
+              letter={letter}
+              nthChild={i + 1}
+              handleClick={onLetterClick}
+            />
           ))
         }
       </div>
