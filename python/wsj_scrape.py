@@ -22,6 +22,28 @@ def get_today_game():
 
     return gameData["today"]
 
+def get_total_answers(answers):
+    total = 0
+    for answer in answers:
+        if len(answer) == 4:
+            total += 1
+        elif len(answer) > 4:
+            total += len(answer)
+        # if answer has 7 unique letters, add 7 to total
+        if len(set(answer)) == 7:
+            total += 7
+        # print(answer, total)
+    return total
+
+
+# genius 70%
+# amazing 50%
+# great 40%
+# nice 25%
+# solid 15%
+# good 8%
+# moving up 5%
+# good start 2%
 
 if __name__ == "__main__":
     game = get_today_game()
@@ -29,5 +51,19 @@ if __name__ == "__main__":
     print("date: ", game["displayDate"])
     print("center letter: ", game["centerLetter"])
     print("outer letters: ", game["outerLetters"])
+    print("Score Minimum Score: ")
+    min_scores = {
+        "genius": round(get_total_answers(game["answers"]) * 0.7),
+        "amazing": round(get_total_answers(game["answers"]) * 0.5),
+        "great": round(get_total_answers(game["answers"]) * 0.4),
+        "nice": round(get_total_answers(game["answers"]) * 0.25),
+        "solid": round(get_total_answers(game["answers"]) * 0.15),
+        "good": round(get_total_answers(game["answers"]) * 0.08),
+        "moving up": round(get_total_answers(game["answers"]) * 0.05),
+        "good start": round(get_total_answers(game["answers"]) * 0.02)
+        
+    }
+    print(min_scores)
     print("answers:")
     print(game["answers"])
+    print("total answers: ", get_total_answers(game["answers"]))
