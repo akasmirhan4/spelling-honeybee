@@ -60,23 +60,27 @@ export function MainGame() {
     }
 
     // check if word contain other letters
-    if (!_textInput.split("").every((letter) => game.validLetters.includes(letter))) {
-      const error = `${_textInput} contains invalid letters!`
+    if (
+      !_textInput
+        .split("")
+        .every((letter) => game.validLetters.includes(letter))
+    ) {
+      const error = `${_textInput} contains invalid letters!`;
       errors.push(error);
       toast.error(error);
     }
 
     // check if word is valid
-    const answers = game.answers;
-    if (!answers.includes(_textInput.toLowerCase())) {
-      const error = `"${_textInput}" is not a valid word!`;
-      errors.push(error);
-      toast.error(error);
-    }
-
     if (errors.length == 0) {
-      setSubmittedWords([...submittedWords, _textInput]);
-      toast.success(`"${_textInput}" is a valid word!`);
+      const answers = game.answers;
+      if (!answers.includes(_textInput.toLowerCase())) {
+        const error = `"${_textInput}" is not a valid word!`;
+        errors.push(error);
+        toast.error(error);
+      } else {
+        setSubmittedWords([...submittedWords, _textInput]);
+        toast.success(`"${_textInput}" is a valid word!`);
+      }
     }
     setTextInput("");
   };
