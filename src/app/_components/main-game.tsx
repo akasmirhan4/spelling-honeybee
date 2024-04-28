@@ -7,6 +7,11 @@ import { api } from "~/trpc/react";
 import { Progress } from "./progress";
 import { WordList } from "./word-list";
 
+// TODO:
+// - shake animation when word is not valid
+// - add notification
+// - disable submitting words if textinput is empty or api is loading
+
 export function MainGame() {
   const [textInput, setTextInput] = useState("HONEYBEES");
   const specialLetter = "Y";
@@ -20,6 +25,8 @@ export function MainGame() {
   ]);
   const mutation = api.dictionary.isWordExist.useMutation();
 
+  const [submittedValidWords, setSubmittedValidWords] = useState<string[]>([])
+
   // if textinput is longer than 19, alert window
   useEffect(() => {
     if (textInput.length >= 19) {
@@ -32,6 +39,7 @@ export function MainGame() {
     const dictionary = await mutation.mutateAsync({ word: textInput });
     if (dictionary.isExist) {
       console.log(textInput + " exist in dictionary");
+      setSubmittedValidWords([...submittedValidWords, textInput])
     } else {
       console.log(textInput + " does not exist in dictionary");
     }
@@ -76,7 +84,7 @@ export function MainGame() {
         <Progress />
 
         {/* word list */}
-        <WordList words={[]} />
+        <WordList words={submittedValidWords} />
       </div>
     </div>
   );
