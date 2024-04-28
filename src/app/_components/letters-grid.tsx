@@ -34,9 +34,24 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
       onMouseLeave={() => {
         setOnMouseDown(false);
       }}
+      onTouchStart={(e) => {
+        e.stopPropagation();
+        setOnMouseDown(true);
+        setIsHover(true);
+      }}
+      onTouchEnd={(e) => {
+        e.stopPropagation();
+        setIsHover(false);
+        setOnMouseDown(false);
+      }}
+      onTouchCancel={(e) => {
+        e.stopPropagation();
+        setIsHover(false);
+        setOnMouseDown(false);
+      }}
     >
       <svg
-        className={`absolute left-[30%] top-[33%] h-[33%] w-[40%] cursor-pointer ${nthChild === 0 ? "fill-primary" : "fill-grey"}`}
+        className={`touch-none select-none absolute left-[30%] top-[33%] h-[33%] w-[40%] cursor-pointer ${nthChild === 0 ? "fill-primary" : "fill-grey"}`}
         viewBox="0 0 120 103.92304845413263"
         data-testid="hive-cell"
         style={{

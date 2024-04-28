@@ -37,6 +37,8 @@ export function MainGame() {
   const onSubmitWord = async () => {
     if (!game) return;
 
+    if (!textInput) return;
+
     const errors = [];
 
     const _textInput = textInput.toUpperCase();
@@ -85,7 +87,7 @@ export function MainGame() {
     setTextInput("");
   };
   return game ? (
-    <div className="container flex h-[100vh]">
+    <div className="container grid h-[100dvh] gap-y-8 md:h-[100dvh] md:grid-cols-2">
       <div className="flex flex-1 flex-col items-center">
         <GameInput
           textInput={textInput}
@@ -139,13 +141,15 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`border-grey flex h-full cursor-pointer select-none items-center rounded-full border px-12 text-2xl ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`border-grey flex h-full cursor-pointer select-none items-center rounded-full border px-8 text-xl md:px-12 md:text-2xl ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
       }}
       onMouseUp={() => setOnMouseDown(false)}
       onMouseLeave={() => setOnMouseDown(false)}
+      onTouchStart={() => setOnMouseDown(true)}
+      onTouchEnd={() => setOnMouseDown(false)}
     >
       {text}
     </div>
@@ -167,6 +171,8 @@ function CustomIconButton({ icon, onClick }: CustomIconButtonProps) {
       }}
       onMouseUp={() => setOnMouseDown(false)}
       onMouseLeave={() => setOnMouseDown(false)}
+      onTouchStart={() => setOnMouseDown(true)}
+      onTouchEnd={() => setOnMouseDown(false)}
     >
       {/* icon equal side*/}
       <img src={icon} className="h-10 w-10" draggable={false} />
