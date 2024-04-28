@@ -14,19 +14,11 @@ import toast from "react-hot-toast";
 // - disable submitting words if textinput is empty or api is loading
 
 export function MainGame() {
-  const [textInput, setTextInput] = useState("HONEYBEES");
-  const specialLetter = "Y";
-  const [usableLetter, setUsableLetter] = useState([
-    "H",
-    "B",
-    "N",
-    "E",
-    "O",
-    "S",
-  ]);
-  const mutation = api.dictionary.isWordExist.useMutation();
+  const [textInput, setTextInput] = useState("");
+  const { data: game } = api.game.getGameData.useQuery({});
+  const [outerLetters, setOuterLetters] = useState<string[]>([]);
 
-  const [submittedValidWords, setSubmittedValidWords] = useState<string[]>([])
+  const [submittedWords, setSubmittedWords] = useState<string[]>([]);
 
   // if textinput is longer than 19, alert window
   useEffect(() => {
@@ -39,17 +31,52 @@ export function MainGame() {
   useEffect(() => {
     if (game) {
       setOuterLetters(game.outerLetters);
-      setAnswers(game.answers);
     }
   }, [game]);
 
   const onSubmitWord = async () => {
-    const dictionary = await mutation.mutateAsync({ word: textInput });
-    if (dictionary.isExist) {
-      console.log(textInput + " exist in dictionary");
-      setSubmittedValidWords([...submittedValidWords, textInput])
-    } else {
-      toast.error(textInput + " is not a valid word");
+    if (!game) return;
+
+    const errors = [];
+
+    const _textInput = textInput.toUpperCase();
+
+    if (_textInput.length < 4) {
+      const error = "Word must be at least 4 characters long";
+      errors.push(error);
+      toast.error(error);
+    }
+
+    if (!_textInput.includes(game.centerLetter)) {
+      const error = "Word must contain the center letter";
+      errors.push(error);
+      toast.error(error);
+    }
+
+    if (submittedWords.includes(_textInput)) {
+      const error = `You have already submitted "${_textInput}"!`;
+      errors.push(error);
+      toast.error(error);
+    }
+
+    // check if word contain other letters
+    if (!_textInput.split("").every((letter) => game.validLetters.includes(letter))) {
+      const error = `${_textInput} contains invalid letters!`
+      errors.push(error);
+      toast.error(error);
+    }
+
+    // check if word is valid
+    const answers = game.answers;
+    if (!answers.includes(_textInput.toLowerCase())) {
+      const error = `"${_textInput}" is not a valid word!`;
+      errors.push(error);
+      toast.error(error);
+    }
+
+    if (errors.length == 0) {
+      setSubmittedWords([...submittedWords, _textInput]);
+      toast.success(`"${_textInput}" is a valid word!`);
     }
     setTextInput("");
   };
@@ -91,7 +118,7 @@ export function MainGame() {
         <Progress />
 
         {/* word list */}
-        <WordList words={[]} />
+        <WordList words={submittedWords} />
       </div>
     </div>
   ) : (

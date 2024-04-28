@@ -1,5 +1,6 @@
 import { dictionaryRouter } from "~/server/api/routers/dictionary";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { gameRouter } from "./routers/game";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   dictionary: dictionaryRouter,
+  game: gameRouter,
 });
 
 // export type definition of API
