@@ -6,6 +6,7 @@ import { LettersGrid } from "./letters-grid";
 import { api } from "~/trpc/react";
 import { Progress } from "./progress";
 import { WordList } from "./word-list";
+import toast from "react-hot-toast";
 
 // TODO:
 // - shake animation when word is not valid
@@ -35,33 +36,39 @@ export function MainGame() {
     }
   }, [textInput]);
 
+  useEffect(() => {
+    if (game) {
+      setOuterLetters(game.outerLetters);
+      setAnswers(game.answers);
+    }
+  }, [game]);
+
   const onSubmitWord = async () => {
     const dictionary = await mutation.mutateAsync({ word: textInput });
     if (dictionary.isExist) {
       console.log(textInput + " exist in dictionary");
       setSubmittedValidWords([...submittedValidWords, textInput])
     } else {
-      console.log(textInput + " does not exist in dictionary");
+      toast.error(textInput + " is not a valid word");
     }
     setTextInput("");
   };
-
-  return (
-    <div className="flex container">
+  return game ? (
+    <div className="container flex h-[100vh]">
       <div className="flex flex-1 flex-col items-center">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}
-          specialLetter={specialLetter}
-          usableLetter={usableLetter}
+          specialLetter={game.centerLetter}
+          usableLetter={outerLetters}
           onSubmitWord={onSubmitWord}
         />
         <LettersGrid
-          specialLetter={specialLetter}
-          usableLetter={usableLetter}
+          specialLetter={game.centerLetter}
+          usableLetter={outerLetters}
           onLetterClick={(letter) => setTextInput(textInput + letter)}
         />
-        <div className="flex gap-3">
+        <div className="flex gap-6">
           <CustomButton
             text="Delete"
             onClick={() => {
@@ -71,10 +78,10 @@ export function MainGame() {
           <CustomIconButton
             icon="imgs/shuffle.svg"
             onClick={() => {
-              const shuffled = [...usableLetter].sort(
+              const shuffled = [...outerLetters].sort(
                 () => Math.random() - 0.5,
               );
-              setUsableLetter(shuffled);
+              setOuterLetters(shuffled);
             }}
           />
           <CustomButton text="Enter" onClick={onSubmitWord} />
@@ -84,9 +91,11 @@ export function MainGame() {
         <Progress />
 
         {/* word list */}
-        <WordList words={submittedValidWords} />
+        <WordList words={[]} />
       </div>
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 }
 
@@ -99,7 +108,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`border-grey flex h-full cursor-pointer select-none items-center rounded-full border px-6 text-sm ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`border-grey flex h-full cursor-pointer select-none items-center rounded-full border px-12 text-2xl ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
@@ -129,7 +138,7 @@ function CustomIconButton({ icon, onClick }: CustomIconButtonProps) {
       onMouseLeave={() => setOnMouseDown(false)}
     >
       {/* icon equal side*/}
-      <img src={icon} className="h-5 w-5" draggable={false} />
+      <img src={icon} className="h-10 w-10" draggable={false} />
     </div>
   );
 }
