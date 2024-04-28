@@ -1,6 +1,5 @@
 "use client";
 
-import { on } from "events";
 import { useState } from "react";
 
 type GridProps = {
@@ -21,6 +20,7 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
   ];
 
   const [onMouseDown, setOnMouseDown] = useState(false);
+  const [isHover, setIsHover] = useState(false);
 
   return (
     <div
@@ -36,7 +36,7 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
       }}
     >
       <svg
-        className={`absolute left-[30%] top-[33%] h-[33%] w-[40%] cursor-pointer ${nthChild === 0 ? "fill-primary" : "fill-grey"} transition-all ease-in hover:opacity-80`}
+        className={`absolute left-[30%] top-[33%] h-[33%] w-[40%] cursor-pointer ${nthChild === 0 ? "fill-primary" : "fill-grey"}`}
         viewBox="0 0 120 103.92304845413263"
         data-testid="hive-cell"
         style={{
@@ -44,6 +44,8 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
           overflow: "visible",
           overflowClipMargin: "content-box",
         }}
+        onMouseOver={() => setIsHover(true)}
+        onMouseOut={() => setIsHover(false)}
       >
         <polygon
           points="0,51.96152422706631 30,0 90,0 120,51.96152422706631 90,103.92304845413263 30,103.92304845413263"
@@ -57,6 +59,7 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
             transition: "all ease-out 0.1s",
             transformOrigin: "center center",
           }}
+          className={`transition-all ease-in ${isHover ? "opacity-60" : ""}`}
         />
         <text
           x="50%"
@@ -78,14 +81,17 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
 
 type LettersGridProps = {
   onLetterClick?: (letter: string) => void;
+  specialLetter: string;
+  usableLetter: string[];
 };
 
-export function LettersGrid({ onLetterClick }: LettersGridProps) {
-  const specialLetter = "Y";
-  const usableLetter = ["H", "B", "N", "E", "O", "S"];
-
+export function LettersGrid({
+  onLetterClick,
+  specialLetter,
+  usableLetter,
+}: LettersGridProps) {
   return (
-    <div className="flex h-full w-80 flex-col align-middle">
+    <div className="mb-12 flex w-3/4 flex-col align-middle">
       <div className="relative w-full pb-[100%] text-black">
         {
           // create svg for special letter
