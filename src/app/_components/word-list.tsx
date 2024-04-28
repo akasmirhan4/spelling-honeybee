@@ -6,9 +6,9 @@ type WordListProps = {
 
 export function WordList({ words }: WordListProps): JSX.Element {
   return (
-    <div className="border-gray mr-10 flex flex-1 flex-col rounded-md border">
+    <div className="border-gray mr-10 flex flex-1 mb-8 flex-col rounded-md border overflow-y-auto">
       <h3 className="px-6 py-4">{`You have found ${words.length} word${words.length > 1 ? "s" : ""}`}</h3>
-      <div className="flex flex-col overflow-y-auto">
+      <div className="flex flex-col">
         {words.map((word, index) => (
           <div
             key={index}
