@@ -43,7 +43,7 @@ export const gameRouter = createTRPCRouter({
       const filepath = `./python/output/${filename}`;
       // read file
       const data = fs.readFileSync(filepath, "utf8");
-      const JSONdata: WordSearchResults = JSON.parse(data);
+      const JSONdata = JSON.parse(data) as WordSearchResults;
       const games: GameData[] = Object.values(JSONdata);
 
       const gameIndex = randInt % games.length;
@@ -73,7 +73,7 @@ export const gameRouter = createTRPCRouter({
           console.error(err);
           reject(err);
         }
-        const output: WSJOutput = JSON.parse(stdout);
+        const output = JSON.parse(stdout) as WSJOutput;
         const gameData: GameData = {
           centerLetter: output.centerLetter,
           outerLetters: output.outerLetters,

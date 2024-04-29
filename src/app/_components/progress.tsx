@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 
 type ProgressProps = {
   answers: string[];
@@ -35,7 +34,7 @@ type ScoreRank = {
 
 export function Progress({ answers, words }: ProgressProps): JSX.Element {
   const [score, setScore] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
+  const [_, setTotalScore] = useState(0);
   const [minScoreRank, setMinScoreRank] = useState<ScoreRank[]>([]);
   const [rank, setRank] = useState<ScoreRankName>("Beginner");
   const [progressLeftPosition, setProgressLeftPosition] = useState(0);
