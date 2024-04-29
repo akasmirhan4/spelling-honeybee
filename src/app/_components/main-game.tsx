@@ -49,7 +49,7 @@ export function MainGame() {
         setSubmittedWords(wsjSubmittedWords.split(","));
       }
     } else {
-      amirrul.mutateAsync(
+      amirrul.mutate(
         {},
         {
           onSuccess: (data: GameData) => {

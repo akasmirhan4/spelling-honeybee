@@ -24,6 +24,10 @@ const getRandomNumber = () => {
   return parseInt(hash, 16);
 };
 
+type WordSearchResults = {
+  [key: string]: GameData;
+};
+
 export const gameRouter = createTRPCRouter({
   getGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
     return await new Promise<GameData>((resolve, reject) => {
@@ -32,7 +36,8 @@ export const gameRouter = createTRPCRouter({
       const filepath = `./python/output/${filename}`;
       // read file
       const data = fs.readFileSync(filepath, "utf8");
-      const games: GameData[] = Object.values(JSON.parse(data));
+      const JSONdata: WordSearchResults = JSON.parse(data);
+      const games: GameData[] = Object.values(JSONdata);
 
       const gameIndex = randInt % games.length;
       const selectedGame = games[gameIndex];
@@ -57,31 +62,34 @@ export const gameRouter = createTRPCRouter({
       const filename = "wsj_scrape.py";
       const filepath = `./python/${filename}`;
       const { exec } = require("child_process");
-      exec(`python ${filepath}`, (err: string, stdout: string, stderr: string) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        }
-        const output = JSON.parse(stdout);
-        const gameData: GameData = {
-          centerLetter: output.centerLetter,
-          outerLetters: output.outerLetters,
-          validLetters: output.validLetters,
-          answers: output.answers,
-          count: output.answers.length,
-        };
+      exec(
+        `python ${filepath}`,
+        (err: string, stdout: string, _: string) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          }
+          const output = JSON.parse(stdout);
+          const gameData: GameData = {
+            centerLetter: output.centerLetter,
+            outerLetters: output.outerLetters,
+            validLetters: output.validLetters,
+            answers: output.answers,
+            count: output.answers.length,
+          };
 
-        gameData.centerLetter = gameData.centerLetter.toUpperCase();
-        gameData.outerLetters = gameData.outerLetters.map((letter) =>
-          letter.toUpperCase(),
-        );
-        gameData.validLetters = gameData.validLetters.map((letter) =>
-          letter.toUpperCase(),
-        );
+          gameData.centerLetter = gameData.centerLetter.toUpperCase();
+          gameData.outerLetters = gameData.outerLetters.map((letter) =>
+            letter.toUpperCase(),
+          );
+          gameData.validLetters = gameData.validLetters.map((letter) =>
+            letter.toUpperCase(),
+          );
 
-        console.log({ gameData });
-        resolve(gameData);
-      });
+          console.log({ gameData });
+          resolve(gameData);
+        },
+      );
     });
   }),
 });
