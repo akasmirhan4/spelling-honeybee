@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GameInput } from "./game-input";
 import { LettersGrid } from "./letters-grid";
 import { api } from "~/trpc/react";
@@ -135,51 +135,47 @@ export function MainGame() {
   };
 
   return (!playWSJ && !amirrul.isPending) || (playWSJ && !wsj.isPending) ? (
-    <Suspense>
-      <div className="flex flex-col justify-center md:container md:flex-row-reverse">
-        <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
-          <Progress words={submittedWords} answers={answers} />
-          {/* word list */}
-          <WordList words={submittedWords} />
-        </div>
-        <div className="flex w-screen flex-1 flex-col items-center md:w-1/2">
-          <GameInput
-            textInput={textInput}
-            onTextInput={setTextInput}
-            specialLetter={centerLetter}
-            usableLetter={outerLetters}
-            onSubmitWord={onSubmitWord}
+    <div className="flex flex-col justify-center md:container md:flex-row-reverse">
+      <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
+        <Progress words={submittedWords} answers={answers} />
+        {/* word list */}
+        <WordList words={submittedWords} />
+      </div>
+      <div className="flex w-screen flex-1 flex-col items-center md:w-1/2">
+        <GameInput
+          textInput={textInput}
+          onTextInput={setTextInput}
+          specialLetter={centerLetter}
+          usableLetter={outerLetters}
+          onSubmitWord={onSubmitWord}
+        />
+        <LettersGrid
+          specialLetter={centerLetter}
+          usableLetter={outerLetters}
+          onLetterClick={(letter) => setTextInput(textInput + letter)}
+        />
+        <div className="mb-8 flex gap-6">
+          <CustomButton
+            text="Delete"
+            onClick={() => {
+              setTextInput(textInput.slice(0, -1));
+            }}
           />
-          <LettersGrid
-            specialLetter={centerLetter}
-            usableLetter={outerLetters}
-            onLetterClick={(letter) => setTextInput(textInput + letter)}
+          <CustomIconButton
+            icon="imgs/shuffle.svg"
+            onClick={() => {
+              const shuffled = [...outerLetters].sort(
+                () => Math.random() - 0.5,
+              );
+              setOuterLetters(shuffled);
+            }}
           />
-          <div className="mb-8 flex gap-6">
-            <CustomButton
-              text="Delete"
-              onClick={() => {
-                setTextInput(textInput.slice(0, -1));
-              }}
-            />
-            <CustomIconButton
-              icon="imgs/shuffle.svg"
-              onClick={() => {
-                const shuffled = [...outerLetters].sort(
-                  () => Math.random() - 0.5,
-                );
-                setOuterLetters(shuffled);
-              }}
-            />
-            <CustomButton text="Enter" onClick={onSubmitWord} />
-          </div>
+          <CustomButton text="Enter" onClick={onSubmitWord} />
         </div>
       </div>
-    </Suspense>
+    </div>
   ) : (
-    <Suspense>
-      <div>Loading...</div>
-    </Suspense>
+    <div>Loading...</div>
   );
 }
 
