@@ -34,14 +34,12 @@ type ScoreRank = {
 
 export function Progress({ answers, words }: ProgressProps): JSX.Element {
   const [score, setScore] = useState(0);
-  const [_, setTotalScore] = useState(0);
   const [minScoreRank, setMinScoreRank] = useState<ScoreRank[]>([]);
   const [rank, setRank] = useState<ScoreRankName>("Beginner");
   const [progressLeftPosition, setProgressLeftPosition] = useState(0);
 
   useEffect(() => {
     const _totalScore = calculateTotalScore();
-    setTotalScore(_totalScore);
     const _minScoreRank: ScoreRank[] = [
       { rank: "Beginner", score: 0 },
       { rank: "Good Start", score: Math.round(_totalScore * 0.02) },

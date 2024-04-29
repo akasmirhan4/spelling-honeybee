@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type WordListProps = {
@@ -37,9 +38,12 @@ const WordListCompact = ({ words }: WordListProps): JSX.Element => {
               userSelect: "none",
             }}
           >
-            <img
+            <Image
               src="imgs/back.svg"
-              className={`flex h-3 w-3 ${isExpanded ? "rotate-[90deg]" : "rotate-[270deg]"} items-center justify-center transition-all ease-in-out`}
+              alt="expand icon"
+              width={6}
+              height={6}
+              className={`flex ${isExpanded ? "rotate-[90deg]" : "rotate-[270deg]"} items-center justify-center transition-all ease-in-out`}
               draggable={false}
             />
           </div>
