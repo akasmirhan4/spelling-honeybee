@@ -4,11 +4,11 @@ import { WSJButton } from "../_components/wsj-button";
 
 export default async function Play() {
   return (
-    <main className="flex max-h-screen flex-col justify-center overflow-hidden bg-white text-black">
+    <main className="flex max-h-screen w-screen flex-col items-center overflow-hidden bg-white text-black">
       {/* topbar */}
-      <div className="border-grey fixed top-0 z-50 flex h-12 w-full items-center justify-between border bg-white">
-        <div className="container flex h-full items-center">
-          <div className="flex-1"></div>
+      <div className="border-grey fixed top-0 z-50 flex h-12 w-full items-center justify-center border">
+        <div className="container flex justify-between h-full">
+          <div className="flex-1" />
           <div className="flex h-full flex-1 items-center justify-end">
             <WSJButton />
             <Link
@@ -20,7 +20,7 @@ export default async function Play() {
           </div>
         </div>
       </div>
-      <div className="mt-12">
+      <div className="container mt-12">
         <MainGame />
       </div>
     </main>
