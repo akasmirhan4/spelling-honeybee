@@ -7,6 +7,9 @@ import fs from "fs";
 import type { GameData } from "~/types";
 import { exec } from "child_process";
 import path from "path";
+import { load } from "cheerio";
+import axios from "axios";
+import { isText } from "domhandler";
 
 const getRandomNumber = () => {
   const date = new Date();
@@ -35,6 +38,8 @@ type WSJOutput = {
   validLetters: string[];
   answers: string[];
 };
+
+type WSJOutputs = Record<"today" | "yesterday" | "pastPuzzles", WSJOutput>;
 
 export const gameRouter = createTRPCRouter({
   getGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
@@ -65,35 +70,39 @@ export const gameRouter = createTRPCRouter({
     });
   }),
   getWSJGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
-    // run python script await
-    return await new Promise<GameData>((resolve, reject) => {
-      const filename = "wsj_scrape.py";
-      const filepath = path.join(process.cwd(), "python", filename);
-      exec(`python ${filepath}`, (err, stdout, _) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        }
-        const output = JSON.parse(stdout) as WSJOutput;
-        const gameData: GameData = {
-          centerLetter: output.centerLetter,
-          outerLetters: output.outerLetters,
-          validLetters: output.validLetters,
-          answers: output.answers,
-          count: output.answers.length,
-        };
+    const url = "https://www.nytimes.com/puzzles/spelling-bee";
 
-        gameData.centerLetter = gameData.centerLetter.toUpperCase();
-        gameData.outerLetters = gameData.outerLetters.map((letter) =>
-          letter.toUpperCase(),
-        );
-        gameData.validLetters = gameData.validLetters.map((letter) =>
-          letter.toUpperCase(),
-        );
+    const response = await axios.get(url);
+    const $ = load(response.data);
+    const scriptDOM = $("script").get(2)?.firstChild;
+    if (!scriptDOM) throw new Error("No script found");
+    if (!isText(scriptDOM)) throw new Error("Script is not text");
 
-        console.log({ gameData });
-        resolve(gameData);
-      });
-    });
+    const scriptString = scriptDOM.data;
+
+    if (!scriptString) {
+      throw new Error("No script found");
+    }
+
+    const _gameData = scriptString
+      .split("window.gameData = ")[1]
+      ?.split(";")[0];
+
+    if (!_gameData) {
+      throw new Error("No game data found");
+    }
+
+    const allGameData = JSON.parse(_gameData) as WSJOutputs;
+    const gameData = allGameData.today;
+
+    gameData.centerLetter = gameData.centerLetter.toUpperCase();
+    gameData.outerLetters = gameData.outerLetters.map((letter) =>
+      letter.toUpperCase(),
+    );
+    gameData.validLetters = gameData.validLetters.map((letter) =>
+      letter.toUpperCase(),
+    );
+
+    return gameData;
   }),
 });
