@@ -106,7 +106,7 @@ export function LettersGrid({
   usableLetter,
 }: LettersGridProps) {
   return (
-    <div className="mb-12 flex w-3/4 flex-col align-middle">
+    <div className="mb-8 flex w-3/4 flex-col align-middle">
       <div className="relative w-full pb-[100%] text-black">
         {
           // create svg for special letter

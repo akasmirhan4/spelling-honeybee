@@ -16,17 +16,21 @@ import { GameData } from "~/types";
 // - disable submitting words if textinput is empty or api is loading
 
 export function MainGame() {
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState(
+    localStorage.getItem("textInput") || "",
+  );
   const amirrul = api.game.getGameData.useMutation();
   const wsj = api.game.getWSJGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
   const [centerLetter, setCenterLetter] = useState("");
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
+  const [submittedWords, setSubmittedWords] = useState<string[]>([]);
 
   const playWSJ = useSearchParams().get("wsj") === "true";
 
   useEffect(() => {
+    setSubmittedWords([]);
     if (playWSJ) {
       wsj.mutateAsync(
         {},
@@ -39,6 +43,10 @@ export function MainGame() {
           },
         },
       );
+      const wsjSubmittedWords = localStorage.getItem("wsjSubmittedWords");
+      if (wsjSubmittedWords) {
+        setSubmittedWords(wsjSubmittedWords.split(","));
+      }
     } else {
       amirrul.mutateAsync(
         {},
@@ -51,15 +59,19 @@ export function MainGame() {
           },
         },
       );
+      const amirrulSubmittedWords = localStorage.getItem(
+        "amirrulSubmittedWords",
+      );
+      if (amirrulSubmittedWords) {
+        setSubmittedWords(amirrulSubmittedWords.split(","));
+      }
     }
   }, [playWSJ]);
-
-  const [submittedWords, setSubmittedWords] = useState<string[]>([]);
 
   // if textinput is longer than 19, alert window
   useEffect(() => {
     if (textInput.length >= 19) {
-      alert("You have reached the maximum number of characters");
+      toast.error("You have reached the maximum number of characters");
       setTextInput("");
     }
   }, [textInput]);
@@ -105,12 +117,22 @@ export function MainGame() {
         errors.push(error);
         toast.error(error);
       } else {
-        setSubmittedWords([...submittedWords, _textInput]);
+        const _submittedWords = [...submittedWords, _textInput];
+        setSubmittedWords(_submittedWords);
+        if (playWSJ) {
+          localStorage.setItem("wsjSubmittedWords", _submittedWords.join(","));
+        } else {
+          localStorage.setItem(
+            "amirrulSubmittedWords",
+            _submittedWords.join(","),
+          );
+        }
         toast.success(`"${_textInput}" is a valid word!`);
       }
     }
     setTextInput("");
   };
+
   return (!playWSJ && !amirrul.isPending) || (playWSJ && !wsj.isPending) ? (
     <div className="flex flex-col justify-center md:container md:flex-row-reverse">
       <div className="flex w-screen flex-col md:w-1/2 md:flex-1">

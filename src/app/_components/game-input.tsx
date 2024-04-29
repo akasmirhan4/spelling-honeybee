@@ -54,7 +54,7 @@ export function GameInput({
 
   return (
     <div
-      className={`mb-8 mt-8 flex items-center justify-center text-center font-bold uppercase outline-none ${fontSize}`}
+      className={`my-6 md:my-8 flex items-center justify-center text-center font-bold uppercase outline-none ${fontSize}`}
       tabIndex={0}
     >
       {/* create span for each letter in textinput. if letter is special letter make the color primary, if not in usable letter make grey */}
