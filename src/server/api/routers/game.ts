@@ -71,7 +71,8 @@ export const gameRouter = createTRPCRouter({
   getWSJGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
     const url = "https://www.nytimes.com/puzzles/spelling-bee";
 
-    const response = await axios.get(url);
+    const response = await axios.get<string, Text>(url);
+    console.log({ response })
     const $ = load(response.data);
     const scriptDOM = $("script").get(2)?.firstChild;
     if (!scriptDOM) throw new Error("No script found");
