@@ -5,7 +5,6 @@ import * as crypto from "crypto";
 import { env } from "~/env";
 import fs from "fs";
 import type { GameData } from "~/types";
-import { exec } from "child_process";
 import path from "path";
 import { load } from "cheerio";
 import axios from "axios";
@@ -93,7 +92,14 @@ export const gameRouter = createTRPCRouter({
     }
 
     const allGameData = JSON.parse(_gameData) as WSJOutputs;
-    const gameData = allGameData.today;
+    const gameData: GameData = {
+      centerLetter: allGameData.today.centerLetter,
+      outerLetters: allGameData.today.outerLetters,
+      validLetters: allGameData.today.validLetters,
+      answers: allGameData.today.answers,
+      count: allGameData.today.answers.length,
+    
+    };
 
     gameData.centerLetter = gameData.centerLetter.toUpperCase();
     gameData.outerLetters = gameData.outerLetters.map((letter) =>
