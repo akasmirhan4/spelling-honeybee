@@ -6,6 +6,7 @@ import { env } from "~/env";
 import fs from "fs";
 import type { GameData } from "~/types";
 import { exec } from "child_process";
+import path from "path";
 
 const getRandomNumber = () => {
   const date = new Date();
@@ -40,7 +41,7 @@ export const gameRouter = createTRPCRouter({
     return await new Promise<GameData>((resolve, reject) => {
       const randInt = getRandomNumber();
       const filename = "output_selected_games.json";
-      const filepath = `./python/output/${filename}`;
+      const filepath = path.join(process.cwd(), "python", "output", filename);
       // read file
       const data = fs.readFileSync(filepath, "utf8");
       const JSONdata = JSON.parse(data) as WordSearchResults;
@@ -67,7 +68,7 @@ export const gameRouter = createTRPCRouter({
     // run python script await
     return await new Promise<GameData>((resolve, reject) => {
       const filename = "wsj_scrape.py";
-      const filepath = `./python/${filename}`;
+      const filepath = path.join(process.cwd(), "python", filename);
       exec(`python ${filepath}`, (err, stdout, _) => {
         if (err) {
           console.error(err);
