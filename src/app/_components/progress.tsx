@@ -98,11 +98,11 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   };
 
   return (
-    <div className="flex cursor-pointer items-center py-10 pl-2 pr-12">
+    <div className="flex cursor-pointer items-center py-4 md:py-10 mx-6">
       {/* rank */}
-      <h3 className="min-w-[6em] text-xl font-bold">{rank}</h3>
+      <h3 className="min-w-[6em] text-md font-bold">{rank}</h3>
       {/* progress bar */}
-      <div className="relative flex min-w-[calc(100%-10em)] flex-grow items-center">
+      <div className="relative flex min-w-[calc(100%-8em)] flex-grow items-center">
         {/* progress line */}
         <div className="bg-grey relative flex h-[1px] w-full items-center">
           {/* progress dots*/}

@@ -88,7 +88,7 @@ export function MainGame() {
   };
   return game ? (
     <div className="container grid h-[100dvh] gap-y-8 md:h-[100dvh] md:grid-cols-2">
-      <div className="flex flex-1 flex-col items-center">
+      <div className="order-2 flex flex-1 flex-col items-center md:order-1">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}
@@ -120,9 +120,8 @@ export function MainGame() {
           <CustomButton text="Enter" onClick={onSubmitWord} />
         </div>
       </div>
-      <div className="flex flex-1 flex-col">
+      <div className="order-1 flex flex-1 flex-col md:order-2">
         <Progress words={submittedWords} answers={game.answers} />
-
         {/* word list */}
         <WordList words={submittedWords} />
       </div>
