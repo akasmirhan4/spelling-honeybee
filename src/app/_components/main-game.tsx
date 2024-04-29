@@ -87,8 +87,13 @@ export function MainGame() {
     setTextInput("");
   };
   return game ? (
-    <div className="container grid h-[100dvh] gap-y-8 md:h-[100dvh] md:grid-cols-2">
-      <div className="order-2 flex flex-1 flex-col items-center md:order-1">
+    <div className="flex flex-col justify-center md:container md:flex-row-reverse">
+      <div className="flex w-screen md:w-1/2 flex-col md:flex-1">
+        <Progress words={submittedWords} answers={game.answers} />
+        {/* word list */}
+        <WordList words={submittedWords} />
+      </div>
+      <div className="flex w-screen md:w-1/2 flex-1 flex-col items-center">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}
@@ -101,7 +106,7 @@ export function MainGame() {
           usableLetter={outerLetters}
           onLetterClick={(letter) => setTextInput(textInput + letter)}
         />
-        <div className="flex gap-6">
+        <div className="flex gap-6 mb-8">
           <CustomButton
             text="Delete"
             onClick={() => {
@@ -120,11 +125,6 @@ export function MainGame() {
           <CustomButton text="Enter" onClick={onSubmitWord} />
         </div>
       </div>
-      <div className="order-1 flex flex-1 flex-col md:order-2">
-        <Progress words={submittedWords} answers={game.answers} />
-        {/* word list */}
-        <WordList words={submittedWords} />
-      </div>
     </div>
   ) : (
     <div>Loading...</div>
@@ -140,7 +140,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`border-grey flex h-full cursor-pointer select-none items-center rounded-full border px-8 text-xl md:px-12 md:text-2xl ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`border-grey md:text-md flex h-full cursor-pointer select-none items-center rounded-full border px-8 text-xl sm:text-2xl md:px-12 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();

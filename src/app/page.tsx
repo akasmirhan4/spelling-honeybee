@@ -4,17 +4,17 @@ import { SubscribeButton } from "./_components/subscribe-button";
 export default async function Home() {
 
   return (
-    <main className="flex h-[100dvh] flex-col items-center justify-center bg-primary text-black">
+    <main className="flex min-h-[100dvh] flex-col items-center justify-center bg-primary text-black overflow-hidden">
       <div className="container flex flex-col items-center justify-center gap-8 md:gap-12 px-4">
         <img
           src="imgs/spelling-bee-icon.svg"
           alt="Spelling Bee"
           className="h-24 w-24 md:h-32 md:w-32"
         />
-        <h1 className="text-3xl font-extrabold tracking-tight md:text-[3rem] lg:text-[5rem] text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight md:text-[5rem] text-center">
           Spelling HoneyBee
         </h1>
-        <h5 className="text-center text-2xl font-light tracking-tight md:text-[2rem] lg:text-[2.5rem] ">
+        <h5 className="text-center text-2xl font-light tracking-tight md:text-[2.5rem] ">
           How many words can you make with 7 letters?
         </h5>
         <div className="flex flex-col gap-4">

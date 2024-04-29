@@ -98,9 +98,9 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   };
 
   return (
-    <div className="flex cursor-pointer items-center py-4 md:py-10 mx-6">
+    <div className="mx-6 flex cursor-pointer items-center py-4 md:py-10">
       {/* rank */}
-      <h3 className="min-w-[6em] text-md font-bold">{rank}</h3>
+      <h3 className="text-md min-w-[6em] font-bold">{rank}</h3>
       {/* progress bar */}
       <div className="relative flex min-w-[calc(100%-8em)] flex-grow items-center">
         {/* progress line */}
