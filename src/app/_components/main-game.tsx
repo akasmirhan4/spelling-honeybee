@@ -121,7 +121,7 @@ export function MainGame() {
         </div>
       </div>
       <div className="flex flex-1 flex-col">
-        <Progress />
+        <Progress words={submittedWords} answers={game.answers} />
 
         {/* word list */}
         <WordList words={submittedWords} />
