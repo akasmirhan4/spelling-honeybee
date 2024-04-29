@@ -7,6 +7,8 @@ import { api } from "~/trpc/react";
 import { Progress } from "./progress";
 import { WordList } from "./word-list";
 import toast from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
+import { GameData } from "~/types";
 
 // TODO:
 // - shake animation when word is not valid
@@ -15,8 +17,42 @@ import toast from "react-hot-toast";
 
 export function MainGame() {
   const [textInput, setTextInput] = useState("");
-  const { data: game } = api.game.getGameData.useQuery({});
+  const amirrul = api.game.getGameData.useMutation();
+  const wsj = api.game.getWSJGameData.useMutation();
+  const [validLetters, setValidLetters] = useState<string[]>([]);
+  const [centerLetter, setCenterLetter] = useState("");
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<string[]>([]);
+
+  const playWSJ = useSearchParams().get("wsj") === "true";
+
+  useEffect(() => {
+    if (playWSJ) {
+      wsj.mutateAsync(
+        {},
+        {
+          onSuccess: (data: GameData) => {
+            setOuterLetters(data.outerLetters);
+            setCenterLetter(data.centerLetter);
+            setValidLetters(data.validLetters);
+            setAnswers(data.answers);
+          },
+        },
+      );
+    } else {
+      amirrul.mutateAsync(
+        {},
+        {
+          onSuccess: (data: GameData) => {
+            setOuterLetters(data.outerLetters);
+            setCenterLetter(data.centerLetter);
+            setValidLetters(data.validLetters);
+            setAnswers(data.answers);
+          },
+        },
+      );
+    }
+  }, [playWSJ]);
 
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
 
@@ -28,15 +64,7 @@ export function MainGame() {
     }
   }, [textInput]);
 
-  useEffect(() => {
-    if (game) {
-      setOuterLetters(game.outerLetters);
-    }
-  }, [game]);
-
   const onSubmitWord = async () => {
-    if (!game) return;
-
     if (!textInput) return;
 
     const errors = [];
@@ -49,7 +77,7 @@ export function MainGame() {
       toast.error(error);
     }
 
-    if (!_textInput.includes(game.centerLetter)) {
+    if (!_textInput.includes(centerLetter)) {
       const error = "Word must contain the center letter";
       errors.push(error);
       toast.error(error);
@@ -63,9 +91,7 @@ export function MainGame() {
 
     // check if word contain other letters
     if (
-      !_textInput
-        .split("")
-        .every((letter) => game.validLetters.includes(letter))
+      !_textInput.split("").every((letter) => validLetters.includes(letter))
     ) {
       const error = `${_textInput} contains invalid letters!`;
       errors.push(error);
@@ -74,7 +100,6 @@ export function MainGame() {
 
     // check if word is valid
     if (errors.length == 0) {
-      const answers = game.answers;
       if (!answers.includes(_textInput.toLowerCase())) {
         const error = `"${_textInput}" is not a valid word!`;
         errors.push(error);
@@ -86,27 +111,27 @@ export function MainGame() {
     }
     setTextInput("");
   };
-  return game ? (
+  return (!playWSJ && !amirrul.isPending) || (playWSJ && !wsj.isPending) ? (
     <div className="flex flex-col justify-center md:container md:flex-row-reverse">
-      <div className="flex w-screen md:w-1/2 flex-col md:flex-1">
-        <Progress words={submittedWords} answers={game.answers} />
+      <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
+        <Progress words={submittedWords} answers={answers} />
         {/* word list */}
         <WordList words={submittedWords} />
       </div>
-      <div className="flex w-screen md:w-1/2 flex-1 flex-col items-center">
+      <div className="flex w-screen flex-1 flex-col items-center md:w-1/2">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}
-          specialLetter={game.centerLetter}
+          specialLetter={centerLetter}
           usableLetter={outerLetters}
           onSubmitWord={onSubmitWord}
         />
         <LettersGrid
-          specialLetter={game.centerLetter}
+          specialLetter={centerLetter}
           usableLetter={outerLetters}
           onLetterClick={(letter) => setTextInput(textInput + letter)}
         />
-        <div className="flex gap-6 mb-8">
+        <div className="mb-8 flex gap-6">
           <CustomButton
             text="Delete"
             onClick={() => {
@@ -140,7 +165,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`border-grey md:text-md flex h-full cursor-pointer select-none items-center rounded-full border px-8 text-xl sm:text-2xl md:px-12 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`border-grey text-md flex cursor-pointer select-none items-center rounded-full border px-8 md:px-12 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
