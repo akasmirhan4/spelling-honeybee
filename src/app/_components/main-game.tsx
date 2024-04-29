@@ -8,7 +8,8 @@ import { Progress } from "./progress";
 import { WordList } from "./word-list";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
-import { GameData } from "~/types";
+import type { GameData } from "~/types";
+import Image from "next/image";
 
 // TODO:
 // - shake animation when word is not valid
@@ -17,7 +18,7 @@ import { GameData } from "~/types";
 
 export function MainGame() {
   const [textInput, setTextInput] = useState(
-    localStorage.getItem("textInput") || "",
+    localStorage.getItem("textInput") ?? "",
   );
   const amirrul = api.game.getGameData.useMutation();
   const wsj = api.game.getWSJGameData.useMutation();
@@ -32,7 +33,7 @@ export function MainGame() {
   useEffect(() => {
     setSubmittedWords([]);
     if (playWSJ) {
-      wsj.mutateAsync(
+      wsj.mutate(
         {},
         {
           onSuccess: (data: GameData) => {
@@ -221,7 +222,7 @@ function CustomIconButton({ icon, onClick }: CustomIconButtonProps) {
       onTouchEnd={() => setOnMouseDown(false)}
     >
       {/* icon equal side*/}
-      <img src={icon} className="h-10 w-10" draggable={false} />
+      <Image width={40} height={40} alt={icon} src={icon} draggable={false} />
     </div>
   );
 }

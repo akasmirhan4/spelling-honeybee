@@ -70,12 +70,12 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   }, [words]);
 
   const calculateTotalScore = () => {
-    let totalScore = answers.reduce(reduceCalculateScore, 0);
+    const totalScore = answers.reduce(reduceCalculateScore, 0);
     return totalScore;
   };
 
   const calculateScore = () => {
-    let score = words.reduce(reduceCalculateScore, 0);
+    const score = words.reduce(reduceCalculateScore, 0);
     return score;
   };
 

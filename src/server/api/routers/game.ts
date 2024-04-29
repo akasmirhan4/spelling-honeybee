@@ -4,7 +4,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import * as crypto from "crypto";
 import { env } from "~/env";
 import fs from "fs";
-import { GameData } from "~/types";
+import type { GameData } from "~/types";
 
 const getRandomNumber = () => {
   const date = new Date();
@@ -26,36 +26,38 @@ const getRandomNumber = () => {
 
 export const gameRouter = createTRPCRouter({
   getGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
-    const randInt = getRandomNumber();
-    const filename = "output_selected_games.json";
-    const filepath = `./python/output/${filename}`;
-    // read file
-    const data = fs.readFileSync(filepath, "utf8");
-    const games = Object.values(JSON.parse(data)) as GameData[];
+    return await new Promise<GameData>((resolve, reject) => {
+      const randInt = getRandomNumber();
+      const filename = "output_selected_games.json";
+      const filepath = `./python/output/${filename}`;
+      // read file
+      const data = fs.readFileSync(filepath, "utf8");
+      const games: GameData[] = Object.values(JSON.parse(data));
 
-    const gameIndex = randInt % games.length;
-    const selectedGame = games[gameIndex];
-    if (!selectedGame) {
-      throw new Error("No game found");
-    }
-
-    // convert all to cap
-    selectedGame.centerLetter = selectedGame.centerLetter.toUpperCase();
-    selectedGame.outerLetters = selectedGame.outerLetters.map((letter) =>
-      letter.toUpperCase(),
-    );
-    selectedGame.validLetters = selectedGame.validLetters.map((letter) =>
-      letter.toUpperCase(),
-    );
-    return selectedGame;
+      const gameIndex = randInt % games.length;
+      const selectedGame = games[gameIndex];
+      if (!selectedGame) {
+        reject("No game found");
+      } else {
+        // convert all to cap
+        selectedGame.centerLetter = selectedGame.centerLetter.toUpperCase();
+        selectedGame.outerLetters = selectedGame.outerLetters.map((letter) =>
+          letter.toUpperCase(),
+        );
+        selectedGame.validLetters = selectedGame.validLetters.map((letter) =>
+          letter.toUpperCase(),
+        );
+        resolve(selectedGame);
+      }
+    });
   }),
   getWSJGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
     // run python script await
-    return await new Promise<GameData | any>((resolve, reject) => {
+    return await new Promise<GameData>((resolve, reject) => {
       const filename = "wsj_scrape.py";
       const filepath = `./python/${filename}`;
       const { exec } = require("child_process");
-      exec(`python ${filepath}`, (err: any, stdout: any, stderr: any) => {
+      exec(`python ${filepath}`, (err: string, stdout: string, stderr: string) => {
         if (err) {
           console.error(err);
           reject(err);

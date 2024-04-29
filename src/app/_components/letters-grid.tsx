@@ -24,7 +24,7 @@ function Grid({ letter, nthChild, handleClick }: GridProps): JSX.Element {
 
   return (
     <div
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         setOnMouseDown(true);
         handleClick && handleClick(letter);
       }}
