@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { SubscribeButton } from "./_components/subscribe-button";
+import Image from "next/image";
 
 export default async function Home() {
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-center bg-primary text-black overflow-hidden">
       <div className="container flex flex-col items-center justify-center gap-8 md:gap-12 px-4">
-        <img
+        <Image
+          width={96}
+          height={96}
           src="imgs/spelling-bee-icon.svg"
           alt="Spelling Bee"
-          className="h-24 w-24 md:h-32 md:w-32"
+          className="md:h-32 md:w-32"
         />
         <h1 className="text-3xl font-extrabold tracking-tight md:text-[5rem] text-center">
           Spelling HoneyBee

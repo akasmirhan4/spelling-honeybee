@@ -32,6 +32,18 @@ export function MainGame() {
 
   useEffect(() => {
     setSubmittedWords([]);
+    const date = new Date().toLocaleDateString();
+    const displayDate = localStorage.getItem("displayDate");
+    if (!displayDate) {
+      localStorage.setItem("displayDate", date);
+    } else {
+      if (displayDate !== date) {
+        localStorage.setItem("displayDate", date);
+        localStorage.setItem("wsjSubmittedWords" + date, "");
+        localStorage.setItem("amirrulSubmittedWords" + date, "");
+        localStorage.removeItem("textInput");
+      }
+    }
     if (playWSJ) {
       wsj.mutate(
         {},
@@ -44,7 +56,9 @@ export function MainGame() {
           },
         },
       );
-      const wsjSubmittedWords = localStorage.getItem("wsjSubmittedWords");
+      const wsjSubmittedWords = localStorage.getItem(
+        "wsjSubmittedWords" + date,
+      );
       if (wsjSubmittedWords) {
         setSubmittedWords(wsjSubmittedWords.split(","));
       }
@@ -61,7 +75,7 @@ export function MainGame() {
         },
       );
       const amirrulSubmittedWords = localStorage.getItem(
-        "amirrulSubmittedWords",
+        "amirrulSubmittedWords" + date,
       );
       if (amirrulSubmittedWords) {
         setSubmittedWords(amirrulSubmittedWords.split(","));
@@ -79,6 +93,7 @@ export function MainGame() {
 
   const onSubmitWord = async () => {
     if (!textInput) return;
+    const date = new Date().toLocaleDateString();
 
     const errors = [];
 
@@ -121,10 +136,13 @@ export function MainGame() {
         const _submittedWords = [...submittedWords, _textInput];
         setSubmittedWords(_submittedWords);
         if (playWSJ) {
-          localStorage.setItem("wsjSubmittedWords", _submittedWords.join(","));
+          localStorage.setItem(
+            "wsjSubmittedWords" + date,
+            _submittedWords.join(","),
+          );
         } else {
           localStorage.setItem(
-            "amirrulSubmittedWords",
+            "amirrulSubmittedWords" + date,
             _submittedWords.join(","),
           );
         }
