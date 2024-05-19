@@ -55,6 +55,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   }, []);
 
   useEffect(() => {
+    if (minScoreRank.length === 0) return;
     const _score = calculateScore();
     setScore(_score);
     const _rank = minScoreRank.findLast((rank) => _score >= rank.score);
@@ -64,7 +65,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         (getRankNumber(_score) / (minScoreRank.length - 1)) * 100;
       setProgressLeftPosition(_leftPosition);
     }
-  }, [words]);
+  }, [words, minScoreRank]);
 
   const calculateTotalScore = () => {
     const totalScore = answers.reduce(reduceCalculateScore, 0);
@@ -101,7 +102,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
       {/* progress bar */}
       <div className="relative flex min-w-[calc(100%-8em)] flex-grow items-center">
         {/* progress line */}
-        <div className="bg-grey relative flex h-[1px] w-full items-center">
+        <div className="relative flex h-[1px] w-full items-center bg-grey">
           {/* progress dots*/}
           <div className="flex w-full justify-between">
             {minScoreRank.map((rank, index) => (
