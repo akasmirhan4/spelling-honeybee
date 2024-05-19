@@ -14,13 +14,19 @@ export default {
       },
       animation: {
         blink: 'blink 1s step-end infinite',
+        type: 'type 2.5s steps(30, end) infinite',
       },
       keyframes: {
         blink: {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0' },
+        },
+        type:{
+          '0%': { width: '0' },
+          '60%': { width: '100%' },
+          '100%': { width: '100%' },
         }
-      }
+      },
     },
   },
   plugins: [],
