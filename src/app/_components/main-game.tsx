@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import type { GameData } from "~/types";
 import Image from "next/image";
+import Confetti from "./Confetti";
 
 // TODO:
 // - shake animation when word is not valid
@@ -27,6 +28,7 @@ export function MainGame() {
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
   const [answers, setAnswers] = useState<string[]>([]);
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
+  const [isConfettiVisible, setIsConfettiVisible] = useState(false);
 
   const playWSJ = useSearchParams().get("wsj") === "true";
 
@@ -146,7 +148,14 @@ export function MainGame() {
             _submittedWords.join(","),
           );
         }
-        toast.success(`"${_textInput}" is a valid word!`);
+
+        // check if word is pangram
+        if (new Set(_textInput.split("")).size == 7) {
+          toast.success("Pangram!");
+          setIsConfettiVisible(true);
+        } else {
+          toast.success(`"${_textInput}" is a valid word!`);
+        }
       }
     }
     setTextInput("");
@@ -190,6 +199,10 @@ export function MainGame() {
           />
           <CustomButton text="Enter" onClick={onSubmitWord} />
         </div>
+        <Confetti
+          active={isConfettiVisible}
+          onComplete={() => setIsConfettiVisible(false)}
+        />
       </div>
     </div>
   ) : (
