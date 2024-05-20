@@ -22,7 +22,7 @@ export default async function Home() {
         </h5>
         <div className="flex flex-col gap-4">
           <Link
-            className="flex min-w-64 max-w-xs flex-col rounded-full bg-black p-8 text-center text-white transition-all ease-out hover:bg-black/80"
+            className="flex min-w-64 max-w-xs flex-col rounded-full bg-black p-8 text-center text-white transition-all ease-out md:hover:bg-black/80 active:bg-black/80"
             href="/play"
             target="_self"
           >

@@ -14,7 +14,7 @@ export function WSJButton() {
           pathname: "/play",
           query: { wsj: !playWSJ },
         }}
-        className="flex h-full items-center px-6 text-xs font-bold hover:bg-primary/50"
+        className="flex h-full items-center px-2 text-xs font-bold md:hover:bg-primary/50 active:bg-primary/50 ease-in-out transition-all"
       >
         <h1>{playWSJ ? "Amirrul" : "WSJ"}</h1>
       </Link>
