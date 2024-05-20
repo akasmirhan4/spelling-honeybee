@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
 import { BarChartBig } from "lucide-react";
+import { Button } from "~/components/ui/button";
 
 export default function LeaderboardButton({}) {
   return (
-    <button
-      className="flex h-full items-center px-2 text-xs font-bold md:hover:bg-primary/50 active:bg-primary/50 ease-in-out transition-all"
+    <Button
       onClick={() => {
         // Share button logic
       }}
+      variant="ghost"
     >
       <BarChartBig size={24} />
-    </button>
+    </Button>
   );
 }

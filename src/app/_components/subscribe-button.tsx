@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "~/components/ui/button";
 
 type HoverProps = {
   onMouseEnter: () => void;
@@ -20,13 +21,13 @@ export function SubscribeButton() {
   const [hovering, onHoverProps] = useHover();
 
   return (
-    <div
-      className="flex min-w-64 max-w-xs cursor-pointer flex-col gap-4 rounded-full border border-black bg-transparent p-8 text-center text-black transition-all ease-out md:hover:bg-white/20 active:bg-white/20"
+    <Button
+      className="rounded-full border border-black bg-transparent p-8 text-center text-black md:hover:bg-white/20 active:bg-white/20"
       {...onHoverProps}
     >
       <h3 className="text-2xl font-bold">
         {hovering ? "It's free gurl" : "Subscribe"}
       </h3>
-    </div>
+    </Button>
   );
 }

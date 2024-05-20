@@ -14,6 +14,7 @@ import { WordList } from "../_components/word-list";
 import { GameInput } from "../_components/game-input";
 import { LettersGrid } from "../_components/letters-grid";
 import Confetti from "../_components/Confetti";
+import { Button } from "~/components/ui/button";
 
 // TODO:
 // - shake animation when word is not valid
@@ -218,8 +219,10 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
   const [onMouseDown, setOnMouseDown] = useState(false);
 
   return (
-    <div
-      className={`text-md flex cursor-pointer select-none items-center rounded-full border border-gray-300 px-8 md:px-10 ${onMouseDown ? "bg-gray-300/50" : "bg-transparent"}`}
+    <Button
+      className="text-md rounded-full"
+      size="lg"
+      variant="outline"
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
@@ -230,7 +233,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
       onTouchEnd={() => setOnMouseDown(false)}
     >
       {text}
-    </div>
+    </Button>
   );
 }
 
@@ -242,8 +245,10 @@ function CustomIconButton({ iconNode, onClick }: CustomIconButtonProps) {
   const [onMouseDown, setOnMouseDown] = useState(false);
 
   return (
-    <div
-      className={`border-gray flex cursor-pointer select-none items-center rounded-full border p-2 ${onMouseDown ? "bg-gray-300/50" : "bg-transparent"}`}
+    <Button
+      variant="outline"
+      size="lg"
+      className="rounded-full p-2"
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
@@ -254,7 +259,7 @@ function CustomIconButton({ iconNode, onClick }: CustomIconButtonProps) {
       onTouchEnd={() => setOnMouseDown(false)}
     >
       {iconNode}
-    </div>
+    </Button>
   );
 }
 
