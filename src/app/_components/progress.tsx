@@ -102,13 +102,13 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
       {/* progress bar */}
       <div className="relative flex min-w-[calc(100%-8em)] flex-grow items-center">
         {/* progress line */}
-        <div className="relative flex h-[1px] w-full items-center bg-grey">
+        <div className="relative flex h-[1px] w-full items-center bg-gray-300">
           {/* progress dots*/}
           <div className="flex w-full justify-between">
             {minScoreRank.map((rank, index) => (
               <span
                 key={index}
-                className={`${getRankNumber(score) > index ? "after:bg-primary" : "after:bg-grey"} relative w-0 after:absolute after:left-[-4.5px] after:top-[-4.5px] after:h-[9px] after:w-[9px] after:rounded-full after:first:rounded-none after:last:rounded-none`}
+                className={`${getRankNumber(score) > index ? "after:bg-primary" : "after:bg-gray-300"} relative w-0 after:absolute after:left-[-4.5px] after:top-[-4.5px] after:h-[9px] after:w-[9px] after:rounded-full after:first:rounded-none after:last:rounded-none`}
               />
             ))}
           </div>

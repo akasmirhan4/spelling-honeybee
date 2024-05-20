@@ -219,7 +219,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`text-md flex cursor-pointer select-none items-center rounded-full border border-grey px-8 md:px-10 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`text-md flex cursor-pointer select-none items-center rounded-full border border-gray-300 px-8 md:px-10 ${onMouseDown ? "bg-gray-300/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
@@ -243,7 +243,7 @@ function CustomIconButton({ iconNode, onClick }: CustomIconButtonProps) {
 
   return (
     <div
-      className={`border-gray flex cursor-pointer select-none items-center rounded-full border p-2 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`border-gray flex cursor-pointer select-none items-center rounded-full border p-2 ${onMouseDown ? "bg-gray-300/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
