@@ -21,14 +21,16 @@ export function GameInput({
   const [fontSize, setFontSize] = useState("text-5xl");
 
   //   handle keypress
-  const handleKeyPress = (e: KeyboardEvent) => {
+  const handleKeyPress = (e: KeyboardEvent, textInput: string) => {
     // if backspace, remove last letter
     if (e.key === "Backspace") {
-      onTextInput(textInput.slice(0, -1));
+      textInput = textInput.slice(0, -1);
+      onTextInput(textInput);
     }
     // else if alphabet not others
     else if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
-      onTextInput(textInput + e.key.toUpperCase());
+      textInput += e.key.toUpperCase();
+      onTextInput(textInput);
     }
     // if enter, submit word
     else if (e.key === "Enter") {
@@ -37,6 +39,7 @@ export function GameInput({
   };
 
   useEffect(() => {
+    window.onkeydown = (e) => handleKeyPress(e, textInput);
     // change font size to smaller if textinput is longer than 10
     if (textInput.length >= 15) {
       setFontSize("text-3xl");
@@ -47,14 +50,20 @@ export function GameInput({
     }
   }, [textInput]);
 
-  // check if page is focused
-  window.onfocus = () => setIsPageFocused(true);
-  window.onblur = () => setIsPageFocused(false);
-  window.onkeydown = (e) => handleKeyPress(e);
+  useEffect(() => {
+    // check if page is focused
+    window.onfocus = () => setIsPageFocused(true);
+    window.onblur = () => setIsPageFocused(false);
+    return () => {
+      window.onkeydown = null;
+      window.onfocus = null;
+      window.onblur = null;
+    };
+  }, []);
 
   return (
     <div
-      className={`my-6 md:my-8 flex items-center justify-center text-center font-bold uppercase outline-none ${fontSize}`}
+      className={`my-6 flex items-center justify-center text-center font-bold uppercase outline-none md:my-8 ${fontSize}`}
       tabIndex={0}
     >
       {/* create span for each letter in textinput. if letter is special letter make the color primary, if not in usable letter make grey */}
@@ -74,7 +83,7 @@ export function GameInput({
       ))}
       {/* blink */}
       <span
-        className={`animate-blink ml-[1px] h-full min-h-[3rem] w-[0.25rem] ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
+        className={`ml-[1px] h-full min-h-[3rem] w-[0.25rem] animate-blink ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
       />
     </div>
   );

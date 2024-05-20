@@ -9,8 +9,8 @@ import { WordList } from "./word-list";
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import type { GameData } from "~/types";
-import Image from "next/image";
 import Confetti from "./Confetti";
+import { RefreshCcw } from "lucide-react";
 
 // TODO:
 // - shake animation when word is not valid
@@ -18,9 +18,7 @@ import Confetti from "./Confetti";
 // - disable submitting words if textinput is empty or api is loading
 
 export function MainGame() {
-  const [textInput, setTextInput] = useState(
-    localStorage.getItem("textInput") ?? "",
-  );
+  const [textInput, setTextInput] = useState("");
   const amirrul = api.game.getGameData.useMutation();
   const wsj = api.game.getWSJGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
@@ -43,7 +41,6 @@ export function MainGame() {
         localStorage.setItem("displayDate", date);
         localStorage.setItem("wsjSubmittedWords" + date, "");
         localStorage.setItem("amirrulSubmittedWords" + date, "");
-        localStorage.removeItem("textInput");
       }
     }
     if (playWSJ) {
@@ -189,7 +186,7 @@ export function MainGame() {
             }}
           />
           <CustomIconButton
-            icon="imgs/shuffle.svg"
+            iconNode={<RefreshCcw className="size-6" />}
             onClick={() => {
               const shuffled = [...outerLetters].sort(
                 () => Math.random() - 0.5,
@@ -219,7 +216,7 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 
   return (
     <div
-      className={`text-md flex cursor-pointer select-none items-center rounded-full border border-grey px-8 md:px-12 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
+      className={`text-md flex cursor-pointer select-none items-center rounded-full border border-grey px-8 md:px-10 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
       onMouseDown={() => {
         setOnMouseDown(true);
         onClick && onClick();
@@ -235,11 +232,12 @@ function CustomButton({ text, onClick }: CustomButtonProps) {
 }
 
 type CustomIconButtonProps = {
-  icon: string;
+  iconNode: React.ReactNode;
   onClick?: () => void;
 };
-function CustomIconButton({ icon, onClick }: CustomIconButtonProps) {
+function CustomIconButton({ iconNode, onClick }: CustomIconButtonProps) {
   const [onMouseDown, setOnMouseDown] = useState(false);
+
   return (
     <div
       className={`border-gray flex cursor-pointer select-none items-center rounded-full border p-2 ${onMouseDown ? "bg-grey/50" : "bg-transparent"}`}
@@ -252,8 +250,7 @@ function CustomIconButton({ icon, onClick }: CustomIconButtonProps) {
       onTouchStart={() => setOnMouseDown(true)}
       onTouchEnd={() => setOnMouseDown(false)}
     >
-      {/* icon equal side*/}
-      <Image width={40} height={40} alt={icon} src={icon} draggable={false} />
+      {iconNode}
     </div>
   );
 }
