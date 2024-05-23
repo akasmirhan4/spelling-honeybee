@@ -28,7 +28,6 @@ export default function ShareButton() {
           title: `${title} #${gameData.gameNumber}`,
           text: `*${title}*\n*#${gameData.gameNumber}*\n🏅 ${game.rank} (${game.score})\n📃 ${game.submittedWords.length} words\n🎉 ${isPangramFound ? "✅" : "❌"}`,
         };
-        console.log({ shareData });
         if (navigator.share && navigator.canShare(shareData)) {
           await navigator.share(shareData);
           toast.success("Shared!");
