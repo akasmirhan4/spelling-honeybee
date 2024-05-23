@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { GameContext } from "./GameProvider";
 
 type ProgressProps = {
   answers: string[];
@@ -37,6 +38,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   const [minScoreRank, setMinScoreRank] = useState<ScoreRank[]>([]);
   const [rank, setRank] = useState<ScoreRankName>("Beginner");
   const [progressLeftPosition, setProgressLeftPosition] = useState(0);
+  const game = useContext(GameContext);
 
   useEffect(() => {
     const _totalScore = calculateTotalScore();
@@ -58,9 +60,11 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
     if (minScoreRank.length === 0) return;
     const _score = calculateScore();
     setScore(_score);
+    game.setScore(_score);
     const _rank = minScoreRank.findLast((rank) => _score >= rank.score);
     if (_rank) {
       setRank(_rank.rank);
+      game.setRank(_rank.rank);
       const _leftPosition =
         (getRankNumber(_score) / (minScoreRank.length - 1)) * 100;
       setProgressLeftPosition(_leftPosition);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { api } from "~/trpc/react";
 
@@ -15,6 +15,7 @@ import { GameInput } from "../_components/game-input";
 import { LettersGrid } from "../_components/letters-grid";
 import Confetti from "../_components/Confetti";
 import { Button } from "~/components/ui/button";
+import { GameContext } from "../_components/GameProvider";
 
 // TODO:
 // - shake animation when word is not valid
@@ -31,11 +32,13 @@ export default function PlayPage() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
   const [isConfettiVisible, setIsConfettiVisible] = useState(false);
+  const game = useContext(GameContext);
 
   const playWSJ = useSearchParams().get("wsj") === "true";
 
   useEffect(() => {
     setSubmittedWords([]);
+    game.setSubmittedWords([]);
     const date = new Date().toLocaleDateString();
     const displayDate = localStorage.getItem("displayDate");
     if (!displayDate) {
@@ -56,6 +59,7 @@ export default function PlayPage() {
             setCenterLetter(data.centerLetter);
             setValidLetters(data.validLetters);
             setAnswers(data.answers);
+            game.setWsjGameData(data);
           },
         },
       );
@@ -64,6 +68,7 @@ export default function PlayPage() {
       );
       if (wsjSubmittedWords) {
         setSubmittedWords(wsjSubmittedWords.split(","));
+        game.setSubmittedWords(wsjSubmittedWords.split(","));
       }
     } else {
       amirrul.mutate(
@@ -74,6 +79,7 @@ export default function PlayPage() {
             setCenterLetter(data.centerLetter);
             setValidLetters(data.validLetters);
             setAnswers(data.answers);
+            game.setAmirruleGameData(data);
           },
         },
       );
@@ -82,6 +88,7 @@ export default function PlayPage() {
       );
       if (amirrulSubmittedWords) {
         setSubmittedWords(amirrulSubmittedWords.split(","));
+        game.setSubmittedWords(amirrulSubmittedWords.split(","));
       }
     }
   }, [playWSJ]);
@@ -138,6 +145,7 @@ export default function PlayPage() {
       } else {
         const _submittedWords = [...submittedWords, _textInput];
         setSubmittedWords(_submittedWords);
+        game.setSubmittedWords(_submittedWords);
         if (playWSJ) {
           localStorage.setItem(
             "wsjSubmittedWords" + date,
@@ -151,7 +159,7 @@ export default function PlayPage() {
         }
 
         // check if word is pangram
-        if (new Set(_textInput.split("")).size == 7) {
+        if (new Set(_textInput).size == 7) {
           toast.success("Pangram!");
           setIsConfettiVisible(true);
         } else {
@@ -216,21 +224,14 @@ type CustomButtonProps = {
   onClick?: () => void;
 };
 function CustomButton({ text, onClick }: CustomButtonProps) {
-  const [onMouseDown, setOnMouseDown] = useState(false);
-
   return (
     <Button
       className="text-md rounded-full"
       size="lg"
       variant="outline"
       onMouseDown={() => {
-        setOnMouseDown(true);
         onClick && onClick();
       }}
-      onMouseUp={() => setOnMouseDown(false)}
-      onMouseLeave={() => setOnMouseDown(false)}
-      onTouchStart={() => setOnMouseDown(true)}
-      onTouchEnd={() => setOnMouseDown(false)}
     >
       {text}
     </Button>
@@ -242,21 +243,14 @@ type CustomIconButtonProps = {
   onClick?: () => void;
 };
 function CustomIconButton({ iconNode, onClick }: CustomIconButtonProps) {
-  const [onMouseDown, setOnMouseDown] = useState(false);
-
   return (
     <Button
       variant="outline"
       size="lg"
       className="rounded-full p-2"
       onMouseDown={() => {
-        setOnMouseDown(true);
         onClick && onClick();
       }}
-      onMouseUp={() => setOnMouseDown(false)}
-      onMouseLeave={() => setOnMouseDown(false)}
-      onTouchStart={() => setOnMouseDown(true)}
-      onTouchEnd={() => setOnMouseDown(false)}
     >
       {iconNode}
     </Button>
@@ -285,7 +279,7 @@ function Loading() {
       <div>
         {/* Make a loading text that load one letter at a time */}
         <div className="inline-block">
-          <div className="animate-type mt-4 overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
+          <div className="mt-4 animate-type overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
             Loading...
           </div>
         </div>

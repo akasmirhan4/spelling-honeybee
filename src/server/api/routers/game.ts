@@ -28,7 +28,7 @@ const getRandomNumber = () => {
   return parseInt(hash, 16);
 };
 
-type WordSearchResults = Record<string, GameData>;
+type WordSearchResults = Record<string, Omit<GameData, "gameNumber">>;
 
 type WSJOutput = {
   displayDate: string;
@@ -49,13 +49,22 @@ export const gameRouter = createTRPCRouter({
       // read file
       const data = fs.readFileSync(filepath, "utf8");
       const JSONdata = JSON.parse(data) as WordSearchResults;
-      const games: GameData[] = Object.values(JSONdata);
+      const games = Object.values(JSONdata);
 
       const gameIndex = randInt % games.length;
-      const selectedGame = games[gameIndex];
-      if (!selectedGame) {
+      const _selectedGame = games[gameIndex];
+      if (!_selectedGame) {
         reject("No game found");
       } else {
+        const gameNumber = Math.floor(
+          (new Date().getTime() - new Date("2024-04-24").getTime()) /
+            (1000 * 60 * 60 * 24),
+        );
+        const selectedGame = {
+          ..._selectedGame,
+          gameNumber,
+        };
+
         // convert all to cap
         selectedGame.centerLetter = selectedGame.centerLetter.toUpperCase();
         selectedGame.outerLetters = selectedGame.outerLetters.map((letter) =>
@@ -64,6 +73,7 @@ export const gameRouter = createTRPCRouter({
         selectedGame.validLetters = selectedGame.validLetters.map((letter) =>
           letter.toUpperCase(),
         );
+        console.log({ selectedGame });
         resolve(selectedGame);
       }
     });
@@ -92,13 +102,20 @@ export const gameRouter = createTRPCRouter({
     }
 
     const allGameData = JSON.parse(_gameData) as WSJOutputs;
+
+    // game number is days since 2024-04-24
+    const gameNumber = Math.floor(
+      (new Date().getTime() - new Date("2024-04-24").getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+
     const gameData: GameData = {
       centerLetter: allGameData.today.centerLetter,
       outerLetters: allGameData.today.outerLetters,
       validLetters: allGameData.today.validLetters,
       answers: allGameData.today.answers,
       count: allGameData.today.answers.length,
-    
+      gameNumber,
     };
 
     gameData.centerLetter = gameData.centerLetter.toUpperCase();

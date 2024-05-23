@@ -4,4 +4,5 @@ export type GameData = {
   validLetters: string[];
   answers: string[];
   count: number;
+  gameNumber: number;
 };
