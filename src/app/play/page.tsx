@@ -39,7 +39,11 @@ export default function PlayPage() {
   useEffect(() => {
     setSubmittedWords([]);
     game.setSubmittedWords([]);
-    const date = new Date().toLocaleDateString();
+    const date = new Date().toLocaleDateString("en-SG", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
     const displayDate = localStorage.getItem("displayDate");
     if (!displayDate) {
       localStorage.setItem("displayDate", date);
@@ -83,9 +87,7 @@ export default function PlayPage() {
           },
         },
       );
-      const AKSubmittedWords = localStorage.getItem(
-        "AKSubmittedWords" + date,
-      );
+      const AKSubmittedWords = localStorage.getItem("AKSubmittedWords" + date);
       if (AKSubmittedWords) {
         setSubmittedWords(AKSubmittedWords.split(","));
         game.setSubmittedWords(AKSubmittedWords.split(","));
@@ -103,7 +105,11 @@ export default function PlayPage() {
 
   const onSubmitWord = async () => {
     if (!textInput) return;
-    const date = new Date().toLocaleDateString();
+    const date = new Date().toLocaleDateString("en-SG", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
 
     const errors = [];
 

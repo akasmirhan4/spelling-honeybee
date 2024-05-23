@@ -21,7 +21,10 @@ export default async function Home() {
           How many words can you make with 7 letters?
         </h5>
         <div className="flex flex-col gap-4">
-          <Button asChild className="min-w-64 rounded-full bg-black p-8 text-white md:hover:bg-black/80 active:bg-black/80 text-2xl">
+          <Button
+            asChild
+            className="min-w-64 rounded-full bg-black p-8 text-2xl text-white active:bg-black/80 md:hover:bg-black/80"
+          >
             <Link href="/play" target="_self">
               Play
             </Link>
@@ -29,15 +32,15 @@ export default async function Home() {
           <SubscribeButton />
         </div>
         <div className="flex flex-col items-center gap-2">
-          <p className="text-xl font-semibold md:text-1xl">
+          <p className="md:text-1xl text-xl font-semibold">
             {/* today's date as Month Date, Year*/}
-            {new Date().toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
+            {new Date().toLocaleDateString("en-SG", {
+              day: "2-digit",
+              month: "2-digit",
               year: "numeric",
             })}
           </p>
-          <p className="text-xl md:text-1xl">Edited by Amirrul Kasmirhan</p>
+          <p className="md:text-1xl text-xl">Edited by Amirrul Kasmirhan</p>
         </div>
       </div>
     </main>

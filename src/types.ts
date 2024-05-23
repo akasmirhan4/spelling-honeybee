@@ -5,4 +5,5 @@ export type GameData = {
   answers: string[];
   count: number;
   gameNumber: number;
+  displayDate: Date;
 };

@@ -25,10 +25,16 @@ const getRandomNumber = () => {
     .update(seedString)
     .digest("hex");
 
-  return parseInt(hash, 16);
+  return {
+    randInt: parseInt(hash, 16),
+    date,
+  };
 };
 
-type WordSearchResults = Record<string, Omit<GameData, "gameNumber">>;
+type WordSearchResults = Record<
+  string,
+  Omit<GameData, "gameNumber" | "displayDate">
+>;
 
 type NYTOutput = {
   displayDate: string;
@@ -43,7 +49,7 @@ type NYTOutputs = Record<"today" | "yesterday" | "pastPuzzles", NYTOutput>;
 export const gameRouter = createTRPCRouter({
   getGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
     return await new Promise<GameData>((resolve, reject) => {
-      const randInt = getRandomNumber();
+      const { randInt, date } = getRandomNumber();
       const filename = "output_selected_games.json";
       const filepath = path.join(process.cwd(), "python", "output", filename);
       // read file
@@ -60,9 +66,10 @@ export const gameRouter = createTRPCRouter({
           (new Date().getTime() - new Date("2024-04-24").getTime()) /
             (1000 * 60 * 60 * 24),
         );
-        const selectedGame = {
+        const selectedGame: GameData = {
           ..._selectedGame,
           gameNumber,
+          displayDate: date,
         };
 
         // convert all to cap
@@ -116,6 +123,7 @@ export const gameRouter = createTRPCRouter({
       answers: allGameData.today.answers,
       count: allGameData.today.answers.length,
       gameNumber,
+      displayDate: new Date(allGameData.today.displayDate),
     };
 
     gameData.centerLetter = gameData.centerLetter.toUpperCase();
