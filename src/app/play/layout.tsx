@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WSJButton } from "../_components/WSJButton";
+import { NYTButton } from "../_components/NYTButton";
 import { LucideHome } from "lucide-react";
 import ShareButton from "../_components/ShareButton";
 import LeaderboardButton from "../_components/LeaderboardButton";
@@ -25,7 +25,7 @@ export default function PlayLayout({
           <div className="flex h-full flex-1 items-center justify-end gap-2">
             <ShareButton />
             <LeaderboardButton />
-            <WSJButton />
+            <NYTButton />
           </div>
         </div>
       </nav>

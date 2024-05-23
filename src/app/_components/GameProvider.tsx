@@ -5,8 +5,8 @@ import { GameData } from "~/types";
 
 // create a game context
 type GameContextType = {
-  wsjGameData: GameData | null;
-  setWsjGameData: (data: GameData) => void;
+  NYTGameData: GameData | null;
+  setNYTGameData: (data: GameData) => void;
   amirruleGameData: GameData | null;
   setAmirruleGameData: (data: GameData) => void;
   submittedWords: string[];
@@ -18,8 +18,8 @@ type GameContextType = {
 };
 
 export const GameContext = createContext({
-  wsjGameData: null,
-  setWsjGameData: () => {},
+  NYTGameData: null,
+  setNYTGameData: () => {},
   amirruleGameData: null,
   setAmirruleGameData: () => {},
   submittedWords: [],
@@ -37,7 +37,7 @@ export default function GameProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [wsjGameData, setWsjGameData] = useState<GameData | null>(null);
+  const [NYTGameData, setNYTGameData] = useState<GameData | null>(null);
   const [amirruleGameData, setAmirruleGameData] = useState<GameData | null>(
     null,
   );
@@ -47,8 +47,8 @@ export default function GameProvider({
   return (
     <GameContext.Provider
       value={{
-        wsjGameData,
-        setWsjGameData,
+        NYTGameData,
+        setNYTGameData,
         amirruleGameData,
         setAmirruleGameData,
         submittedWords,

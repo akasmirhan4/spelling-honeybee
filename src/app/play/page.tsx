@@ -25,7 +25,7 @@ import { GameContext } from "../_components/GameProvider";
 export default function PlayPage() {
   const [textInput, setTextInput] = useState("");
   const amirrul = api.game.getGameData.useMutation();
-  const wsj = api.game.getWSJGameData.useMutation();
+  const NYT = api.game.getNYTGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
   const [centerLetter, setCenterLetter] = useState("");
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
@@ -34,7 +34,7 @@ export default function PlayPage() {
   const [isConfettiVisible, setIsConfettiVisible] = useState(false);
   const game = useContext(GameContext);
 
-  const playWSJ = useSearchParams().get("wsj") === "true";
+  const playNYT = useSearchParams().get("NYT") === "true";
 
   useEffect(() => {
     setSubmittedWords([]);
@@ -46,12 +46,12 @@ export default function PlayPage() {
     } else {
       if (displayDate !== date) {
         localStorage.setItem("displayDate", date);
-        localStorage.setItem("wsjSubmittedWords" + date, "");
+        localStorage.setItem("NYTSubmittedWords" + date, "");
         localStorage.setItem("amirrulSubmittedWords" + date, "");
       }
     }
-    if (playWSJ) {
-      wsj.mutate(
+    if (playNYT) {
+      NYT.mutate(
         {},
         {
           onSuccess: (data: GameData) => {
@@ -59,16 +59,16 @@ export default function PlayPage() {
             setCenterLetter(data.centerLetter);
             setValidLetters(data.validLetters);
             setAnswers(data.answers);
-            game.setWsjGameData(data);
+            game.setNYTGameData(data);
           },
         },
       );
-      const wsjSubmittedWords = localStorage.getItem(
-        "wsjSubmittedWords" + date,
+      const NYTSubmittedWords = localStorage.getItem(
+        "NYTSubmittedWords" + date,
       );
-      if (wsjSubmittedWords) {
-        setSubmittedWords(wsjSubmittedWords.split(","));
-        game.setSubmittedWords(wsjSubmittedWords.split(","));
+      if (NYTSubmittedWords) {
+        setSubmittedWords(NYTSubmittedWords.split(","));
+        game.setSubmittedWords(NYTSubmittedWords.split(","));
       }
     } else {
       amirrul.mutate(
@@ -91,7 +91,7 @@ export default function PlayPage() {
         game.setSubmittedWords(amirrulSubmittedWords.split(","));
       }
     }
-  }, [playWSJ]);
+  }, [playNYT]);
 
   // if textinput is longer than 19, alert window
   useEffect(() => {
@@ -146,9 +146,9 @@ export default function PlayPage() {
         const _submittedWords = [...submittedWords, _textInput];
         setSubmittedWords(_submittedWords);
         game.setSubmittedWords(_submittedWords);
-        if (playWSJ) {
+        if (playNYT) {
           localStorage.setItem(
-            "wsjSubmittedWords" + date,
+            "NYTSubmittedWords" + date,
             _submittedWords.join(","),
           );
         } else {
@@ -170,7 +170,7 @@ export default function PlayPage() {
     setTextInput("");
   };
 
-  return (!playWSJ && !amirrul.isPending) || (playWSJ && !wsj.isPending) ? (
+  return (!playNYT && !amirrul.isPending) || (playNYT && !NYT.isPending) ? (
     <div className="flex flex-col justify-center md:container md:flex-row-reverse">
       <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
         <Progress words={submittedWords} answers={answers} />

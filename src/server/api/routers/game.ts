@@ -30,7 +30,7 @@ const getRandomNumber = () => {
 
 type WordSearchResults = Record<string, Omit<GameData, "gameNumber">>;
 
-type WSJOutput = {
+type NYTOutput = {
   displayDate: string;
   centerLetter: string;
   outerLetters: string[];
@@ -38,7 +38,7 @@ type WSJOutput = {
   answers: string[];
 };
 
-type WSJOutputs = Record<"today" | "yesterday" | "pastPuzzles", WSJOutput>;
+type NYTOutputs = Record<"today" | "yesterday" | "pastPuzzles", NYTOutput>;
 
 export const gameRouter = createTRPCRouter({
   getGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
@@ -78,7 +78,7 @@ export const gameRouter = createTRPCRouter({
       }
     });
   }),
-  getWSJGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
+  getNYTGameData: publicProcedure.input(z.object({})).mutation(async ({}) => {
     const url = "https://www.nytimes.com/puzzles/spelling-bee";
 
     const response = await axios.get<string, Text>(url);
@@ -101,7 +101,7 @@ export const gameRouter = createTRPCRouter({
       throw new Error("No game data found");
     }
 
-    const allGameData = JSON.parse(_gameData) as WSJOutputs;
+    const allGameData = JSON.parse(_gameData) as NYTOutputs;
 
     // game number is days since 2024-04-24
     const gameNumber = Math.floor(

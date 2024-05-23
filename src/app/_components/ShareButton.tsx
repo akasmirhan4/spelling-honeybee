@@ -9,10 +9,10 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { GameContext } from "./GameProvider";
 
 export default function ShareButton() {
-  const isWSJ = useSearchParams().get("wsj") === "true";
-  const title = isWSJ ? "Spell WSJ" : "Spell AK";
+  const isNYT = useSearchParams().get("NYT") === "true";
+  const title = isNYT ? "Spell NYT" : "Spell AK";
   const game = useContext(GameContext);
-  const gameData = isWSJ ? game.wsjGameData : game.amirruleGameData;
+  const gameData = isNYT ? game.NYTGameData : game.amirruleGameData;
 
   const isPangramFound = game.submittedWords.some(
     (word) => new Set(word).size === 7,
