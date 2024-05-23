@@ -24,7 +24,7 @@ import { GameContext } from "../_components/GameProvider";
 
 export default function PlayPage() {
   const [textInput, setTextInput] = useState("");
-  const amirrul = api.game.getGameData.useMutation();
+  const AK = api.game.getGameData.useMutation();
   const NYT = api.game.getNYTGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
   const [centerLetter, setCenterLetter] = useState("");
@@ -47,7 +47,7 @@ export default function PlayPage() {
       if (displayDate !== date) {
         localStorage.setItem("displayDate", date);
         localStorage.setItem("NYTSubmittedWords" + date, "");
-        localStorage.setItem("amirrulSubmittedWords" + date, "");
+        localStorage.setItem("AKSubmittedWords" + date, "");
       }
     }
     if (playNYT) {
@@ -71,7 +71,7 @@ export default function PlayPage() {
         game.setSubmittedWords(NYTSubmittedWords.split(","));
       }
     } else {
-      amirrul.mutate(
+      AK.mutate(
         {},
         {
           onSuccess: (data: GameData) => {
@@ -79,16 +79,16 @@ export default function PlayPage() {
             setCenterLetter(data.centerLetter);
             setValidLetters(data.validLetters);
             setAnswers(data.answers);
-            game.setAmirruleGameData(data);
+            game.setAKGameData(data);
           },
         },
       );
-      const amirrulSubmittedWords = localStorage.getItem(
-        "amirrulSubmittedWords" + date,
+      const AKSubmittedWords = localStorage.getItem(
+        "AKSubmittedWords" + date,
       );
-      if (amirrulSubmittedWords) {
-        setSubmittedWords(amirrulSubmittedWords.split(","));
-        game.setSubmittedWords(amirrulSubmittedWords.split(","));
+      if (AKSubmittedWords) {
+        setSubmittedWords(AKSubmittedWords.split(","));
+        game.setSubmittedWords(AKSubmittedWords.split(","));
       }
     }
   }, [playNYT]);
@@ -153,7 +153,7 @@ export default function PlayPage() {
           );
         } else {
           localStorage.setItem(
-            "amirrulSubmittedWords" + date,
+            "AKSubmittedWords" + date,
             _submittedWords.join(","),
           );
         }
@@ -170,7 +170,7 @@ export default function PlayPage() {
     setTextInput("");
   };
 
-  return (!playNYT && !amirrul.isPending) || (playNYT && !NYT.isPending) ? (
+  return (!playNYT && !AK.isPending) || (playNYT && !NYT.isPending) ? (
     <div className="flex flex-col justify-center md:container md:flex-row-reverse">
       <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
         <Progress words={submittedWords} answers={answers} />

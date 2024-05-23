@@ -7,8 +7,8 @@ import { GameData } from "~/types";
 type GameContextType = {
   NYTGameData: GameData | null;
   setNYTGameData: (data: GameData) => void;
-  amirruleGameData: GameData | null;
-  setAmirruleGameData: (data: GameData) => void;
+  AKGameData: GameData | null;
+  setAKGameData: (data: GameData) => void;
   submittedWords: string[];
   setSubmittedWords: (words: string[]) => void;
   rank: string;
@@ -20,8 +20,8 @@ type GameContextType = {
 export const GameContext = createContext({
   NYTGameData: null,
   setNYTGameData: () => {},
-  amirruleGameData: null,
-  setAmirruleGameData: () => {},
+  AKGameData: null,
+  setAKGameData: () => {},
   submittedWords: [],
   setSubmittedWords: () => {},
   isPangramFound: false,
@@ -38,7 +38,7 @@ export default function GameProvider({
   children: React.ReactNode;
 }) {
   const [NYTGameData, setNYTGameData] = useState<GameData | null>(null);
-  const [amirruleGameData, setAmirruleGameData] = useState<GameData | null>(
+  const [AKGameData, setAKGameData] = useState<GameData | null>(
     null,
   );
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
@@ -49,8 +49,8 @@ export default function GameProvider({
       value={{
         NYTGameData,
         setNYTGameData,
-        amirruleGameData,
-        setAmirruleGameData,
+        AKGameData,
+        setAKGameData,
         submittedWords,
         setSubmittedWords,
         rank,

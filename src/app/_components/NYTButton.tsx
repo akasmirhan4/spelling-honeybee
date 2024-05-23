@@ -15,7 +15,7 @@ export function NYTButton() {
           query: { NYT: !playNYT },
         }}
       >
-        <h1>{playNYT ? "Amirrul" : "NYT"}</h1>
+        <h1>{playNYT ? "AK" : "NYT"}</h1>
       </Link>
     </Button>
   );

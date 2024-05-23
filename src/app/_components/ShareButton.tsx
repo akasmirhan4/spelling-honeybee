@@ -12,7 +12,7 @@ export default function ShareButton() {
   const isNYT = useSearchParams().get("NYT") === "true";
   const title = isNYT ? "Spell NYT" : "Spell AK";
   const game = useContext(GameContext);
-  const gameData = isNYT ? game.NYTGameData : game.amirruleGameData;
+  const gameData = isNYT ? game.NYTGameData : game.AKGameData;
 
   const isPangramFound = game.submittedWords.some(
     (word) => new Set(word).size === 7,
