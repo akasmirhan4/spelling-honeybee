@@ -55,18 +55,26 @@ export default function PlayPage() {
       }
     }
     if (playNYT) {
-      NYT.mutate(
-        {},
-        {
-          onSuccess: (data: GameData) => {
-            setOuterLetters(data.outerLetters);
-            setCenterLetter(data.centerLetter);
-            setValidLetters(data.validLetters);
-            setAnswers(data.answers);
-            game.setNYTGameData(data);
+      if (!game.NYTGameData) {
+        NYT.mutate(
+          {},
+          {
+            onSuccess: (data: GameData) => {
+              setOuterLetters(data.outerLetters);
+              setCenterLetter(data.centerLetter);
+              setValidLetters(data.validLetters);
+              setAnswers(data.answers);
+              game.setNYTGameData(data);
+            },
           },
-        },
-      );
+        );
+      }
+      else{
+        setOuterLetters(game.NYTGameData.outerLetters);
+        setCenterLetter(game.NYTGameData.centerLetter);
+        setValidLetters(game.NYTGameData.validLetters);
+        setAnswers(game.NYTGameData.answers);
+      }
       const NYTSubmittedWords = localStorage.getItem(
         "NYTSubmittedWords" + date,
       );
@@ -75,18 +83,26 @@ export default function PlayPage() {
         game.setSubmittedWords(NYTSubmittedWords.split(","));
       }
     } else {
-      AK.mutate(
-        {},
-        {
-          onSuccess: (data: GameData) => {
-            setOuterLetters(data.outerLetters);
-            setCenterLetter(data.centerLetter);
-            setValidLetters(data.validLetters);
-            setAnswers(data.answers);
-            game.setAKGameData(data);
+      if (!game.AKGameData) {
+        AK.mutate(
+          {},
+          {
+            onSuccess: (data: GameData) => {
+              setOuterLetters(data.outerLetters);
+              setCenterLetter(data.centerLetter);
+              setValidLetters(data.validLetters);
+              setAnswers(data.answers);
+              game.setAKGameData(data);
+            },
           },
-        },
-      );
+        );
+      }
+      else{
+        setOuterLetters(game.AKGameData.outerLetters);
+        setCenterLetter(game.AKGameData.centerLetter);
+        setValidLetters(game.AKGameData.validLetters);
+        setAnswers(game.AKGameData.answers);
+      }
       const AKSubmittedWords = localStorage.getItem("AKSubmittedWords" + date);
       if (AKSubmittedWords) {
         setSubmittedWords(AKSubmittedWords.split(","));
