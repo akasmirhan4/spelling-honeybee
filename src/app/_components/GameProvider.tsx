@@ -17,20 +17,18 @@ type GameContextType = {
   setScore: (score: number) => void;
 };
 
-export const GameContext = createContext({
+export const GameContext = createContext<GameContextType>({
   NYTGameData: null,
   setNYTGameData: () => {},
   AKGameData: null,
   setAKGameData: () => {},
   submittedWords: [],
   setSubmittedWords: () => {},
-  isPangramFound: false,
-  setIsPangramFound: () => {},
   rank: "",
   setRank: () => {},
   score: 0,
   setScore: () => {},
-} as GameContextType);
+});
 
 export default function GameProvider({
   children,
@@ -38,9 +36,7 @@ export default function GameProvider({
   children: React.ReactNode;
 }) {
   const [NYTGameData, setNYTGameData] = useState<GameData | null>(null);
-  const [AKGameData, setAKGameData] = useState<GameData | null>(
-    null,
-  );
+  const [AKGameData, setAKGameData] = useState<GameData | null>(null);
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
   const [score, setScore] = useState(0);
   const [rank, setRank] = useState("");
