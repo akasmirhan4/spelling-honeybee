@@ -19,15 +19,15 @@ type GameContextType = {
 
 export const GameContext = createContext<GameContextType>({
   NYTGameData: null,
-  setNYTGameData: () => {},
+  setNYTGameData: () => undefined,
   AKGameData: null,
-  setAKGameData: () => {},
+  setAKGameData: () => undefined,
   submittedWords: [],
-  setSubmittedWords: () => {},
+  setSubmittedWords: () => undefined,
   rank: "",
-  setRank: () => {},
+  setRank: () => undefined,
   score: 0,
-  setScore: () => {},
+  setScore: () => undefined,
 });
 
 export default function GameProvider({

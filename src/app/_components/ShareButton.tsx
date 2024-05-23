@@ -31,7 +31,7 @@ export default function ShareButton() {
         if (navigator.share && navigator.canShare(shareData)) {
           await navigator.share(shareData);
           toast.success("Shared!");
-        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        } else if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(
             `${shareData.title}\n${shareData.text}`,
           );
