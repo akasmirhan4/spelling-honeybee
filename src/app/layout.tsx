@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Toaster } from "react-hot-toast";
 import GameProvider from "./_components/GameProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
+        <Analytics />
         <GameProvider>
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </GameProvider>
