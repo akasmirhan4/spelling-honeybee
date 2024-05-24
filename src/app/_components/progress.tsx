@@ -100,7 +100,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   };
 
   return (
-    <div className="mx-6 flex cursor-pointer items-center py-4 md:py-10">
+    <div className="flex cursor-pointer items-center py-4 md:py-10 mr-2">
       {/* rank */}
       <h3 className="text-md min-w-[6em] font-bold">{rank}</h3>
       {/* progress bar */}

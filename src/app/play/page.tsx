@@ -67,8 +67,7 @@ export default function PlayPage() {
             },
           },
         );
-      }
-      else{
+      } else {
         setOuterLetters(game.NYTGameData.outerLetters);
         setCenterLetter(game.NYTGameData.centerLetter);
         setValidLetters(game.NYTGameData.validLetters);
@@ -95,8 +94,7 @@ export default function PlayPage() {
             },
           },
         );
-      }
-      else{
+      } else {
         setOuterLetters(game.AKGameData.outerLetters);
         setCenterLetter(game.AKGameData.centerLetter);
         setValidLetters(game.AKGameData.validLetters);
@@ -192,13 +190,13 @@ export default function PlayPage() {
   };
 
   return (!playNYT && !AK.isPending) || (playNYT && !NYT.isPending) ? (
-    <div className="flex flex-col justify-center md:flex-row-reverse">
-      <div className="flex w-screen flex-col md:w-3/5">
+    <div className="flex flex-col justify-center md:flex-row-reverse w-full">
+      <div className="flex w-full flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
         {/* word list */}
         <WordList words={submittedWords} />
       </div>
-      <div className="flex w-screen flex-col items-center md:w-2/5">
+      <div className="flex w-full flex-col items-center md:w-2/5">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}

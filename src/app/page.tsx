@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 export default async function Home() {
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-primary text-black">
-      <div className="container flex flex-col items-center justify-center gap-8 px-4 md:gap-12">
+      <div className="md:container flex flex-col items-center justify-center gap-8 px-4 md:gap-12">
         <Image
           width={96}
           height={96}
