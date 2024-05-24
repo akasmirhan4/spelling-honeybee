@@ -19,8 +19,7 @@ import { GameContext } from "../_components/GameProvider";
 
 // TODO:
 // - shake animation when word is not valid
-// - add notification
-// - disable submitting words if textinput is empty or api is loading
+// - cache games data and reset when date changes
 
 export default function PlayPage() {
   const [textInput, setTextInput] = useState("");
@@ -193,13 +192,13 @@ export default function PlayPage() {
   };
 
   return (!playNYT && !AK.isPending) || (playNYT && !NYT.isPending) ? (
-    <div className="flex flex-col justify-center md:container md:flex-row-reverse">
-      <div className="flex w-screen flex-col md:w-1/2 md:flex-1">
+    <div className="flex flex-col justify-center md:flex-row-reverse">
+      <div className="flex w-screen flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
         {/* word list */}
         <WordList words={submittedWords} />
       </div>
-      <div className="flex w-screen flex-1 flex-col items-center md:w-1/2">
+      <div className="flex w-screen flex-col items-center md:w-2/5">
         <GameInput
           textInput={textInput}
           onTextInput={setTextInput}
