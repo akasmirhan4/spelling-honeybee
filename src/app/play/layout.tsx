@@ -48,10 +48,7 @@ function Navbar() {
         </div>
         <div className="flex h-full flex-1 items-center justify-end gap-0">
           <TooltipWrapper trigger={<ShareButton />} content={<p>Share</p>} />
-          <TooltipWrapper
-            trigger={<LeaderboardButton />}
-            content={<p>Leaderboard</p>}
-          />
+          <LeaderboardButton />
           <SignedOut>
             <TooltipWrapper
               trigger={
@@ -65,7 +62,9 @@ function Navbar() {
             />
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <div className="mx-2 flex">
+              <UserButton />
+            </div>
           </SignedIn>
         </div>
       </div>
