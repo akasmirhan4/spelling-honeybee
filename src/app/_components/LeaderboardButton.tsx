@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,7 +21,8 @@ import LeaderboardTable from "./LeaderboardTable";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { LeaderboardTableSkeleton } from "./LeaderboardTableSkeleton";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import SignInButton from "./SignInButton";
 
 export default function LeaderboardButton({}) {
   const gameVersion = useSearchParams().get("NYT") === "true" ? "NYT" : "AK";
@@ -50,6 +52,17 @@ export default function LeaderboardButton({}) {
             <LeaderboardTable gameVersion={gameVersion} />
           </Suspense>
         </SignedIn>
+        <SignedOut>
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>
+              Sign in to see how you stack up against other players!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <SignInButton />
+          </DialogFooter>
+        </SignedOut>
       </DialogContent>
     </Dialog>
   );

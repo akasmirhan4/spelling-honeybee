@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { NYTButton } from "../_components/NYTButton";
-import { LucideHome, UserCircle } from "lucide-react";
+import { LucideHome } from "lucide-react";
 import ShareButton from "../_components/ShareButton";
 import LeaderboardButton from "../_components/LeaderboardButton";
 import { Button } from "~/components/ui/button";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { TooltipWrapper } from "../_components/TooltipWrapper";
+import SignInButton from "../_components/SignInButton";
 
 export default function PlayLayout({
   children,
@@ -50,16 +45,7 @@ function Navbar() {
           <TooltipWrapper trigger={<ShareButton />} content={<p>Share</p>} />
           <LeaderboardButton />
           <SignedOut>
-            <TooltipWrapper
-              trigger={
-                <SignInButton>
-                  <Button variant="ghost">
-                    <UserCircle size={24} />
-                  </Button>
-                </SignInButton>
-              }
-              content={<p>Sign In</p>}
-            />
+            <SignInButton variant="icon"/>
           </SignedOut>
           <SignedIn>
             <div className="mx-2 flex">
@@ -69,22 +55,5 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  );
-}
-
-function TooltipWrapper({
-  trigger,
-  content,
-}: {
-  trigger: React.ReactNode;
-  content: React.ReactNode;
-}) {
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>{trigger}</TooltipTrigger>
-        <TooltipContent>{content}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
   );
 }
