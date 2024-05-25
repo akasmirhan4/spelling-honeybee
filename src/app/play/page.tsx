@@ -129,22 +129,18 @@ export default function PlayPage() {
       const error = "Word must be at least 4 characters long";
       errors.push(error);
       toast.error(error);
-    }
-
-    if (!_textInput.includes(centerLetter)) {
+    } else if (!_textInput.includes(centerLetter)) {
       const error = "Word must contain the center letter";
       errors.push(error);
       toast.error(error);
-    }
-
-    if (submittedWords.includes(_textInput)) {
+    } else if (submittedWords.includes(_textInput)) {
       const error = `You have already submitted "${_textInput}"!`;
       errors.push(error);
       toast.error(error);
     }
 
     // check if word contain other letters
-    if (
+    else if (
       !_textInput.split("").every((letter) => validLetters.includes(letter))
     ) {
       const error = `${_textInput} contains invalid letters!`;
@@ -153,7 +149,7 @@ export default function PlayPage() {
     }
 
     // check if word is valid
-    if (errors.length == 0) {
+    else if (errors.length == 0) {
       if (!answers.includes(_textInput.toLowerCase())) {
         const error = `"${_textInput}" is not a valid word!`;
         errors.push(error);
