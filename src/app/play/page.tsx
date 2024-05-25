@@ -13,6 +13,7 @@ import { LettersGrid } from "../_components/letters-grid";
 import Confetti from "../_components/Confetti";
 import { Button } from "~/components/ui/button";
 import { GameContext } from "../_components/GameProvider";
+import { getGameDataAK, getGameDataNYT } from "../api/game";
 
 // TODO:
 // - shake animation when word is not valid
@@ -20,8 +21,6 @@ import { GameContext } from "../_components/GameProvider";
 
 export default function PlayPage() {
   const [textInput, setTextInput] = useState("");
-  // const AK = api.game.getGameData.useMutation();
-  // const NYT = api.game.getNYTGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
   const [centerLetter, setCenterLetter] = useState("");
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
@@ -30,6 +29,7 @@ export default function PlayPage() {
   const [isConfettiVisible, setIsConfettiVisible] = useState(false);
   const game = useContext(GameContext);
 
+  
   const playNYT = useSearchParams().get("NYT") === "true";
 
   useEffect(() => {
@@ -52,18 +52,13 @@ export default function PlayPage() {
     }
     if (playNYT) {
       if (!game.NYTGameData) {
-        // NYT.mutate(
-        //   {},
-        //   {
-        //     onSuccess: (data: GameData) => {
-        //       setOuterLetters(data.outerLetters);
-        //       setCenterLetter(data.centerLetter);
-        //       setValidLetters(data.validLetters);
-        //       setAnswers(data.answers);
-        //       game.setNYTGameData(data);
-        //     },
-        //   },
-        // );
+        getGameDataNYT().then((data: GameData) => {
+          setOuterLetters(data.outerLetters);
+          setCenterLetter(data.centerLetter);
+          setValidLetters(data.validLetters);
+          setAnswers(data.answers);
+          game.setNYTGameData(data);
+        });
       } else {
         setOuterLetters(game.NYTGameData.outerLetters);
         setCenterLetter(game.NYTGameData.centerLetter);
@@ -79,18 +74,13 @@ export default function PlayPage() {
       }
     } else {
       if (!game.AKGameData) {
-        // AK.mutate(
-        //   {},
-        //   {
-        //     onSuccess: (data: GameData) => {
-        //       setOuterLetters(data.outerLetters);
-        //       setCenterLetter(data.centerLetter);
-        //       setValidLetters(data.validLetters);
-        //       setAnswers(data.answers);
-        //       game.setAKGameData(data);
-        //     },
-        //   },
-        // );
+        getGameDataAK().then((data: GameData) => {
+          setOuterLetters(data.outerLetters);
+          setCenterLetter(data.centerLetter);
+          setValidLetters(data.validLetters);
+          setAnswers(data.answers);
+          game.setAKGameData(data);
+        });
       } else {
         setOuterLetters(game.AKGameData.outerLetters);
         setCenterLetter(game.AKGameData.centerLetter);
@@ -182,10 +172,7 @@ export default function PlayPage() {
     setTextInput("");
   };
 
-  return !playNYT ||
-    // && !AK.isPending
-    playNYT ? (
-    // && !NYT.isPending
+  return (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
