@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import GameProvider from "./_components/GameProvider";
 import { Toaster } from "react-hot-toast";
 import { CSPostHogProvider } from "./_analytics/provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,13 +23,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <CSPostHogProvider>
-      <html lang="en">
-        <body className={`font-sans ${inter.variable}`}>
-          <GameProvider>{children}</GameProvider>
-          <Toaster />
-        </body>
-      </html>
-    </CSPostHogProvider>
+    <ClerkProvider>
+      <CSPostHogProvider>
+        <html lang="en">
+          <body className={`font-sans ${inter.variable}`}>
+            <GameProvider>{children}</GameProvider>
+            <Toaster />
+          </body>
+        </html>
+      </CSPostHogProvider>
+    </ClerkProvider>
   );
 }
