@@ -40,7 +40,7 @@ export default function LeaderboardButton({}) {
           <TooltipContent>Leaderboard</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent className="md:min-w-[48em]">
+      <DialogContent className="md:min-w-[48em]" aria-modal>
         <SignedIn>
           <DialogHeader>
             <DialogTitle>Leaderboard</DialogTitle>

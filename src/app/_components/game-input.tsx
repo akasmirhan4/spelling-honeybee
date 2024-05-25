@@ -17,11 +17,14 @@ export function GameInput({
   usableLetter,
   onSubmitWord,
 }: GameInputProps) {
-  const [isPageFocused, setIsPageFocused] = useState(true);
+
   const [fontSize, setFontSize] = useState("text-5xl");
 
   //   handle keypress
   const handleKeyPress = (e: KeyboardEvent, textInput: string) => {
+    const target = e.target as HTMLElement;
+    // if ariaModal is true, return
+    if (target.ariaModal || target.getAttribute("aria-modal")) return;
     // if backspace, remove last letter
     if (e.key === "Backspace") {
       textInput = textInput.slice(0, -1);
@@ -50,17 +53,6 @@ export function GameInput({
     }
   }, [textInput]);
 
-  useEffect(() => {
-    // check if page is focused
-    window.onfocus = () => setIsPageFocused(true);
-    window.onblur = () => setIsPageFocused(false);
-    return () => {
-      window.onkeydown = null;
-      window.onfocus = null;
-      window.onblur = null;
-    };
-  }, []);
-
   return (
     <div
       className={`my-6 flex items-center justify-center text-center font-bold uppercase outline-none md:my-8 ${fontSize}`}
@@ -82,7 +74,7 @@ export function GameInput({
       ))}
       {/* blink */}
       <span
-        className={`animate-blink ml-[1px] h-full min-h-[3rem] w-[0.25rem] ${isPageFocused ? "bg-yellow" : "bg-transparent"}`}
+        className={`ml-[1px] h-full min-h-[3rem] w-[0.25rem] animate-blink bg-yellow`}
       />
     </div>
   );
