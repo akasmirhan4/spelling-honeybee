@@ -25,17 +25,21 @@ export const ScoreRankName = [
   "Beginner",
 ] as const;
 
-export type ScoreRankNameType = typeof ScoreRankName[number];
+export type ScoreRankNameType = (typeof ScoreRankName)[number];
+
+export const GameVersion = ["NYT", "AK"] as const;
+
+export type GameVersion = (typeof GameVersion)[number];
 
 export const rankEnum = pgEnum("rank", ScoreRankName);
-export const gameVersionEnum = pgEnum("game_version", ["NYT", "AK"]);
+export const gameVersionEnum = pgEnum("game_version", GameVersion);
 
 export const userScore = createTable(
   "user_score",
   {
     id: serial("id").primaryKey(),
     username: varchar("username", {
-      length: 10,
+      length: 20,
     }).notNull(),
     score: integer("score").notNull(),
     rank: rankEnum("rank").notNull(),
