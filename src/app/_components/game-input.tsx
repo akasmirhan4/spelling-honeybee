@@ -66,13 +66,12 @@ export function GameInput({
       className={`my-6 flex items-center justify-center text-center font-bold uppercase outline-none md:my-8 ${fontSize}`}
       tabIndex={0}
     >
-      {/* create span for each letter in textinput. if letter is special letter make the color primary, if not in usable letter make gray */}
       {textInput.split("").map((letter, i) => (
         <span
           key={i}
           className={`${
             letter.toUpperCase() === specialLetter
-              ? "text-primary"
+              ? "text-yellow"
               : usableLetter.includes(letter.toUpperCase())
                 ? "text-black"
                 : "text-gray-300"
@@ -83,7 +82,7 @@ export function GameInput({
       ))}
       {/* blink */}
       <span
-        className={`ml-[1px] h-full min-h-[3rem] w-[0.25rem] animate-blink ${isPageFocused ? "bg-primary" : "bg-transparent"}`}
+        className={`animate-blink ml-[1px] h-full min-h-[3rem] w-[0.25rem] ${isPageFocused ? "bg-yellow" : "bg-transparent"}`}
       />
     </div>
   );

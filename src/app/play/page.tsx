@@ -1,9 +1,6 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-
-import { api } from "~/trpc/react";
-
 import toast from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
 import type { GameData } from "~/types";
@@ -23,8 +20,8 @@ import { GameContext } from "../_components/GameProvider";
 
 export default function PlayPage() {
   const [textInput, setTextInput] = useState("");
-  const AK = api.game.getGameData.useMutation();
-  const NYT = api.game.getNYTGameData.useMutation();
+  // const AK = api.game.getGameData.useMutation();
+  // const NYT = api.game.getNYTGameData.useMutation();
   const [validLetters, setValidLetters] = useState<string[]>([]);
   const [centerLetter, setCenterLetter] = useState("");
   const [outerLetters, setOuterLetters] = useState<string[]>([]);
@@ -55,18 +52,18 @@ export default function PlayPage() {
     }
     if (playNYT) {
       if (!game.NYTGameData) {
-        NYT.mutate(
-          {},
-          {
-            onSuccess: (data: GameData) => {
-              setOuterLetters(data.outerLetters);
-              setCenterLetter(data.centerLetter);
-              setValidLetters(data.validLetters);
-              setAnswers(data.answers);
-              game.setNYTGameData(data);
-            },
-          },
-        );
+        // NYT.mutate(
+        //   {},
+        //   {
+        //     onSuccess: (data: GameData) => {
+        //       setOuterLetters(data.outerLetters);
+        //       setCenterLetter(data.centerLetter);
+        //       setValidLetters(data.validLetters);
+        //       setAnswers(data.answers);
+        //       game.setNYTGameData(data);
+        //     },
+        //   },
+        // );
       } else {
         setOuterLetters(game.NYTGameData.outerLetters);
         setCenterLetter(game.NYTGameData.centerLetter);
@@ -82,18 +79,18 @@ export default function PlayPage() {
       }
     } else {
       if (!game.AKGameData) {
-        AK.mutate(
-          {},
-          {
-            onSuccess: (data: GameData) => {
-              setOuterLetters(data.outerLetters);
-              setCenterLetter(data.centerLetter);
-              setValidLetters(data.validLetters);
-              setAnswers(data.answers);
-              game.setAKGameData(data);
-            },
-          },
-        );
+        // AK.mutate(
+        //   {},
+        //   {
+        //     onSuccess: (data: GameData) => {
+        //       setOuterLetters(data.outerLetters);
+        //       setCenterLetter(data.centerLetter);
+        //       setValidLetters(data.validLetters);
+        //       setAnswers(data.answers);
+        //       game.setAKGameData(data);
+        //     },
+        //   },
+        // );
       } else {
         setOuterLetters(game.AKGameData.outerLetters);
         setCenterLetter(game.AKGameData.centerLetter);
@@ -189,8 +186,11 @@ export default function PlayPage() {
     setTextInput("");
   };
 
-  return (!playNYT && !AK.isPending) || (playNYT && !NYT.isPending) ? (
-    <div className="flex flex-col justify-center md:flex-row-reverse w-full">
+  return !playNYT ||
+    // && !AK.isPending
+    playNYT ? (
+    // && !NYT.isPending
+    <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
         {/* word list */}
@@ -281,7 +281,7 @@ function Loading() {
     <div className="my-8 flex flex-col items-center justify-center">
       <svg
         aria-hidden="true"
-        className="dark:primary/50 size-12 animate-spin fill-primary text-gray-200"
+        className="dark:yellow/50 fill-yellow size-12 animate-spin text-gray-200"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -298,7 +298,7 @@ function Loading() {
       <div>
         {/* Make a loading text that load one letter at a time */}
         <div className="inline-block">
-          <div className="mt-4 animate-type overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
+          <div className="animate-type mt-4 overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
             Loading...
           </div>
         </div>

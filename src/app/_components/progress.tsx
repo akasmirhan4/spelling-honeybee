@@ -112,7 +112,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
             {minScoreRank.map((rank, index) => (
               <span
                 key={index}
-                className={`${getRankNumber(score) > index ? "after:bg-primary" : "after:bg-gray-300"} relative w-0 after:absolute after:left-[-4.5px] after:top-[-4.5px] after:h-[9px] after:w-[9px] after:rounded-full after:first:rounded-none after:last:rounded-none`}
+                className={`${getRankNumber(score) > index ? "after:bg-yellow" : "after:bg-gray-300"} relative w-0 after:absolute after:left-[-4.5px] after:top-[-4.5px] after:h-[9px] after:w-[9px] after:rounded-full after:first:rounded-none after:last:rounded-none`}
               />
             ))}
           </div>
@@ -125,7 +125,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
           }}
         >
           {/* progress value */}
-          <span className="absolute flex h-full w-full items-center justify-center rounded-[50%] bg-primary text-xs">
+          <span className="absolute flex h-full w-full items-center justify-center rounded-[50%] bg-yellow text-xs">
             {score}
           </span>
         </div>
