@@ -65,7 +65,7 @@ export async function getGameDataAK() {
     const selectedGame: GameData = {
       ..._selectedGame,
       gameNumber,
-      displayDate: date,
+      displayDate: DateToStringFormatter(date),
     };
 
     // convert all to cap
@@ -118,7 +118,7 @@ export async function getGameDataNYT() {
     answers: allGameData.today.answers,
     count: allGameData.today.answers.length,
     gameNumber,
-    displayDate: new Date(allGameData.today.displayDate),
+    displayDate: DateToStringFormatter(new Date(allGameData.today.displayDate)),
   };
 
   gameData.centerLetter = gameData.centerLetter.toUpperCase();

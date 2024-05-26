@@ -93,19 +93,24 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         score: _score,
         rank: _rank?.rank ?? "Beginner",
         gameVersion,
-        dateDisplay: DateToStringFormatter(game.NYTGameData.displayDate),
+        dateDisplay: game.NYTGameData.displayDate,
         nSubmittedWords: words.length,
         pangramFound,
       }).then(() => {
         console.log("Leaderboard updated");
       });
     } else if (gameVersion === "AK" && !!game.AKGameData) {
+      console.log({
+        game: game.AKGameData,
+        displayDate: game.AKGameData.displayDate,
+        displayDateType: typeof game.AKGameData.displayDate,
+      });
       updateOrCreateLeaderboardEntry({
         username: user.user?.username ?? "anonymous",
         score: _score,
         rank: _rank?.rank ?? "Beginner",
         gameVersion,
-        dateDisplay: DateToStringFormatter(game.AKGameData.displayDate),
+        dateDisplay: game.AKGameData.displayDate,
         nSubmittedWords: words.length,
         pangramFound,
       }).then(() => {
