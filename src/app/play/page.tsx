@@ -174,7 +174,10 @@ export default function PlayPage() {
   };
 
   useEffect(() => {
-    console.log({ game });
+    console.log({
+      game,
+      isValid: (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData),
+    });
   }, [game.AKGameData, game.NYTGameData]);
 
   return (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData) ? (
