@@ -32,6 +32,7 @@ export default async function LeaderboardTable({
   gameVersion,
 }: LeaderboardTableProps) {
   console.log({ gameVersion });
+  const leaderboard = await getLeaderboard(gameVersion);
   return (
     <Table>
       <TableHeader>
@@ -43,7 +44,7 @@ export default async function LeaderboardTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {(await getLeaderboard(gameVersion)).map((user) => (
+        {leaderboard.map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.username}</TableCell>
             <TableCell>{`${user.rank} (${user.score})`}</TableCell>
@@ -51,6 +52,13 @@ export default async function LeaderboardTable({
             <TableCell>{user.pangramFound ? "✅" : "❌"}</TableCell>
           </TableRow>
         ))}
+        {leaderboard.length === 0 && (
+          <TableRow>
+            <TableCell colSpan={4} className="text-center">
+              Why y'all not playing this game??? 😢
+            </TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   );
