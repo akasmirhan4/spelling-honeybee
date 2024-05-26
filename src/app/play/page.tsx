@@ -176,11 +176,11 @@ export default function PlayPage() {
   useEffect(() => {
     console.log({
       game,
-      isValid: (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData),
+      isValid: (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData),
     });
   }, [game.AKGameData, game.NYTGameData]);
 
-  return (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData) ? (
+  return (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
