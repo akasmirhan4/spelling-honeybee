@@ -173,6 +173,10 @@ export default function PlayPage() {
     setTextInput("");
   };
 
+  useEffect(() => {
+    console.log({ game });
+  }, [game.AKGameData, game.NYTGameData]);
+
   return (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
