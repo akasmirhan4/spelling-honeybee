@@ -34,7 +34,12 @@ export const updateOrCreateLeaderboardEntry = cache(
       pangramFound,
     });
     const leaderboardEntry = await db.query.leaderboard.findFirst({
-      where: (fields, operators) => operators.eq(fields.username, username),
+      where: (fields, operators) =>
+        operators.and(
+          operators.eq(fields.username, username),
+          operators.eq(fields.dateDisplay, dateDisplay),
+          operators.eq(fields.gameVersion, gameVersion),
+        ),
     });
     console.log({ leaderboardEntry });
     if (!!leaderboardEntry) {
