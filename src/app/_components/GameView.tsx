@@ -237,8 +237,7 @@ export default function GameView({ gameData }: GameViewProps) {
         // All else, word is valid
 
         // check if word is pangram
-        const pangramFound = new Set(_textInput).size == 7;
-        if (pangramFound) {
+        if (new Set(_textInput).size == 7) {
           toast.success("Pangram!");
           setIsConfettiVisible(true);
         } else {
@@ -258,6 +257,9 @@ export default function GameView({ gameData }: GameViewProps) {
           setTextInput("");
           return;
         }
+        const pangramFound = _submittedWords.some(
+          (word) => new Set(word).size == 7,
+        );
         if (gameVersion === "NYT") {
           updateOrCreateLeaderboardEntry({
             userId: user.id,

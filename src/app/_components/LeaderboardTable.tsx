@@ -15,7 +15,7 @@ const getLeaderboard = cache(
   (gameVersion: "AK" | "NYT") => {
     const leaderboard = db.query.leaderboard.findMany({
       where: (data, { eq }) => eq(data.gameVersion, gameVersion),
-      orderBy: (data, { asc }) => asc(data.score),
+      orderBy: (data, { desc }) => desc(data.score),
     });
     return leaderboard;
   },
