@@ -5,7 +5,6 @@ import { GameContext } from "./GameProvider";
 import { updateOrCreateLeaderboardEntry } from "~/server/db/api";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { DateToStringFormatter } from "~/lib/formatter";
 
 type ProgressProps = {
   answers: string[];

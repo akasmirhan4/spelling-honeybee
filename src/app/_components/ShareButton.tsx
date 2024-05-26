@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { GameContext } from "./GameProvider";
-import { DateToStringFormatter } from "~/lib/formatter";
 
 export default function ShareButton() {
   const isNYT = useSearchParams().get("NYT") === "true";
@@ -26,8 +25,8 @@ export default function ShareButton() {
       variant="ghost"
       onClick={async () => {
         const shareData: ShareData = {
-          title: `${title} (${DateToStringFormatter(gameData?.displayDate)})`,
-          text: `*${title}*\n*${DateToStringFormatter(gameData?.displayDate)}*\n🏅 ${game.rank} (${game.score})\n📃 ${game.submittedWords.length} words\n🎉 ${isPangramFound ? "✅" : "❌"}`,
+          title: `${title} (${gameData?.displayDate})`,
+          text: `*${title}*\n*${gameData?.displayDate}*\n🏅 ${game.rank} (${game.score})\n📃 ${game.submittedWords.length} words\n🎉 ${isPangramFound ? "✅" : "❌"}`,
         };
         if (navigator.share && navigator.canShare(shareData)) {
           await navigator.share(shareData);
