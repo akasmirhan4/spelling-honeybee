@@ -14,12 +14,42 @@ import Confetti from "../_components/Confetti";
 import { Button } from "~/components/ui/button";
 import { GameContext } from "../_components/GameProvider";
 import { DateToStringFormatter } from "~/lib/formatter";
+import {
+  getUserLeaderboardEntries,
+  updateOrCreateLeaderboardEntry,
+} from "~/server/db/api";
+import { useUser } from "@clerk/nextjs";
 
 type GameViewProps = {
   gameData: {
     AK: GameData;
     NYT: GameData;
   };
+};
+
+// # genius 70%
+// # amazing 50%
+// # great 40%
+// # nice 25%
+// # solid 15%
+// # good 8%
+// # moving up 5%
+// # good start 2%
+
+export type ScoreRankName =
+  | "Genius"
+  | "Amazing"
+  | "Great"
+  | "Nice"
+  | "Solid"
+  | "Good"
+  | "Moving Up"
+  | "Good Start"
+  | "Beginner";
+
+export type ScoreRank = {
+  rank: ScoreRankName;
+  score: number;
 };
 
 export default function GameView({ gameData }: GameViewProps) {
@@ -30,9 +60,14 @@ export default function GameView({ gameData }: GameViewProps) {
   const [answers, setAnswers] = useState<string[]>([]);
   const [submittedWords, setSubmittedWords] = useState<string[]>([]);
   const [isConfettiVisible, setIsConfettiVisible] = useState(false);
-  const game = useContext(GameContext);
+  const [minScoreRank, setMinScoreRank] = useState<ScoreRank[]>([]);
+  const [score, setScore] = useState(0);
+  const [rank, setRank] = useState<ScoreRankName>("Beginner");
 
-  const playNYT = useSearchParams().get("NYT") === "true";
+  const game = useContext(GameContext);
+  const { user, isLoaded, isSignedIn } = useUser();
+
+  const gameVersion = useSearchParams().get("NYT") === "true" ? "NYT" : "AK";
 
   useEffect(() => {
     setSubmittedWords([]);
@@ -48,7 +83,7 @@ export default function GameView({ gameData }: GameViewProps) {
         localStorage.setItem("AKSubmittedWords" + date, "");
       }
     }
-    if (playNYT) {
+    if (gameVersion === "NYT") {
       const data = gameData.NYT;
       setOuterLetters(data.outerLetters);
       setCenterLetter(data.centerLetter);
@@ -56,12 +91,27 @@ export default function GameView({ gameData }: GameViewProps) {
       setAnswers(data.answers);
       game.setNYTGameData(data);
 
-      const NYTSubmittedWords = localStorage.getItem(
-        "NYTSubmittedWords" + date,
-      );
-      if (NYTSubmittedWords) {
-        setSubmittedWords(NYTSubmittedWords.split(","));
-        game.setSubmittedWords(NYTSubmittedWords.split(","));
+      if (!isLoaded) return;
+
+      if (isSignedIn && user) {
+        console.log("fetching user leaderboard entries");
+        getUserLeaderboardEntries(user.id, "NYT", data.displayDate).then(
+          (entries) => {
+            if (entries.length === 1 && entries[0]) {
+              const entry = entries[0];
+              setSubmittedWords(entry.submittedWords);
+              game.setSubmittedWords(entry.submittedWords);
+            }
+          },
+        );
+      } else {
+        const NYTSubmittedWords = localStorage.getItem(
+          "NYTSubmittedWords" + date,
+        );
+        if (NYTSubmittedWords) {
+          setSubmittedWords(NYTSubmittedWords.split(","));
+          game.setSubmittedWords(NYTSubmittedWords.split(","));
+        }
       }
     } else {
       const data = gameData.AK;
@@ -70,14 +120,30 @@ export default function GameView({ gameData }: GameViewProps) {
       setValidLetters(data.validLetters);
       setAnswers(data.answers);
       game.setAKGameData(data);
+      if (!isLoaded) return;
 
-      const AKSubmittedWords = localStorage.getItem("AKSubmittedWords" + date);
-      if (AKSubmittedWords) {
-        setSubmittedWords(AKSubmittedWords.split(","));
-        game.setSubmittedWords(AKSubmittedWords.split(","));
+      if (isSignedIn && user) {
+        console.log("fetching user leaderboard entries");
+        getUserLeaderboardEntries(user.id, "AK", data.displayDate).then(
+          (entries) => {
+            if (entries.length === 1 && entries[0]) {
+              const entry = entries[0];
+              setSubmittedWords(entry.submittedWords);
+              game.setSubmittedWords(entry.submittedWords);
+            }
+          },
+        );
+      } else {
+        const AKSubmittedWords = localStorage.getItem(
+          "AKSubmittedWords" + date,
+        );
+        if (AKSubmittedWords) {
+          setSubmittedWords(AKSubmittedWords.split(","));
+          game.setSubmittedWords(AKSubmittedWords.split(","));
+        }
       }
     }
-  }, [playNYT]);
+  }, [gameVersion, isLoaded, user]);
 
   // if textinput is longer than 19, alert window
   useEffect(() => {
@@ -86,6 +152,35 @@ export default function GameView({ gameData }: GameViewProps) {
       setTextInput("");
     }
   }, [textInput]);
+
+  useEffect(() => {
+    if (minScoreRank.length === 0) return;
+    const _score = calculateScore(submittedWords);
+    setScore(_score);
+    game.setScore(_score);
+    const _rank = minScoreRank.findLast((rank) => _score >= rank.score);
+    if (_rank) {
+      setRank(_rank.rank);
+      game.setRank(_rank.rank);
+    }
+  }, [submittedWords, minScoreRank, user]);
+
+  useEffect(() => {
+    if (answers.length === 0) return;
+    const _totalScore = calculateTotalScore(answers);
+    const _minScoreRank: ScoreRank[] = [
+      { rank: "Beginner", score: 0 },
+      { rank: "Good Start", score: Math.round(_totalScore * 0.02) },
+      { rank: "Moving Up", score: Math.round(_totalScore * 0.05) },
+      { rank: "Good", score: Math.round(_totalScore * 0.08) },
+      { rank: "Solid", score: Math.round(_totalScore * 0.15) },
+      { rank: "Nice", score: Math.round(_totalScore * 0.25) },
+      { rank: "Great", score: Math.round(_totalScore * 0.4) },
+      { rank: "Amazing", score: Math.round(_totalScore * 0.5) },
+      { rank: "Genius", score: Math.round(_totalScore * 0.7) },
+    ];
+    setMinScoreRank(_minScoreRank);
+  }, [answers]);
 
   const onSubmitWord = async () => {
     if (!textInput) return;
@@ -128,7 +223,7 @@ export default function GameView({ gameData }: GameViewProps) {
         const _submittedWords = [...submittedWords, _textInput];
         setSubmittedWords(_submittedWords);
         game.setSubmittedWords(_submittedWords);
-        if (playNYT) {
+        if (gameVersion === "NYT") {
           localStorage.setItem(
             "NYTSubmittedWords" + date,
             _submittedWords.join(","),
@@ -142,21 +237,65 @@ export default function GameView({ gameData }: GameViewProps) {
         // All else, word is valid
 
         // check if word is pangram
-        if (new Set(_textInput).size == 7) {
+        const pangramFound = new Set(_textInput).size == 7;
+        if (pangramFound) {
           toast.success("Pangram!");
           setIsConfettiVisible(true);
         } else {
           toast.success(`"${_textInput}" is a valid word!`);
+        }
+
+        const _score = calculateScore(_submittedWords);
+        setScore(_score);
+        game.setScore(_score);
+        const _rank = minScoreRank.findLast((rank) => _score >= rank.score);
+        if (!_rank) throw new Error("Rank not found");
+
+        setRank(_rank.rank);
+        game.setRank(_rank.rank);
+
+        if (!isSignedIn) return;
+        if (!isLoaded) return;
+        if (gameVersion === "NYT") {
+          updateOrCreateLeaderboardEntry({
+            userId: user.id,
+            username: user.username ?? "anonymous",
+            score: _score,
+            rank: _rank.rank,
+            gameVersion,
+            dateDisplay: gameData.NYT.displayDate,
+            submittedWords: _submittedWords,
+            pangramFound,
+          }).then(() => {
+            console.log("Leaderboard updated");
+          });
+        } else if (gameVersion === "AK") {
+          const pangramFound = submittedWords.some(
+            (word) => new Set(word).size == 7,
+          );
+          updateOrCreateLeaderboardEntry({
+            userId: user.id,
+            username: user.username ?? "anonymous",
+            score: _score,
+            rank: _rank.rank,
+            gameVersion,
+            dateDisplay: gameData.AK.displayDate,
+            submittedWords: _submittedWords,
+            pangramFound,
+          }).then(() => {
+            console.log("Leaderboard updated");
+          });
         }
       }
     }
     setTextInput("");
   };
 
-  return (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData) ? (
+  return (gameVersion === "AK" && isLoaded) ||
+    (gameVersion === "NYT" && isLoaded) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
-        <Progress words={submittedWords} answers={answers} />
+        <Progress score={score} minScoreRank={minScoreRank} rank={rank} />
         {/* word list */}
         <WordList words={submittedWords} />
       </div>
@@ -270,3 +409,31 @@ function Loading() {
     </div>
   );
 }
+
+const calculateTotalScore = (answers: string[]) => {
+  const totalScore = answers.reduce(reduceCalculateScore, 0);
+  return totalScore;
+};
+
+const calculateScore = (words: string[]) => {
+  const score = words.reduce(reduceCalculateScore, 0);
+  return score;
+};
+
+const reduceCalculateScore = (acc: number, word: string) => {
+  if (word.length <= 4) {
+    acc += 1;
+  } else {
+    acc += word.length;
+    // if word has 7 unique letters, add 7 points
+    const uniqueLetters = new Set(word.split(""));
+    if (uniqueLetters.size == 7) {
+      acc += 7;
+    }
+  }
+  return acc;
+};
+
+const getRankNumber = (score: number, minScoreRank: ScoreRank[]) => {
+  return minScoreRank.findLastIndex((rank) => score >= rank.score);
+};

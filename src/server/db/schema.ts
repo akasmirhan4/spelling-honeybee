@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   serial,
   pgTableCreator,
@@ -48,6 +49,7 @@ export const leaderboard = createTable(
     dateDisplay: text("date_display").notNull(),
     gameVersion: gameVersionEnum("game_version").notNull(),
     nSubmittedWords: integer("n_submitted_words").notNull(),
+    submittedWords: text("submitted_words").array().default(sql`'{}'::text[]`).notNull(),
     pangramFound: boolean("pangram_found").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt"),

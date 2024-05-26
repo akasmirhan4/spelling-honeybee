@@ -12,7 +12,7 @@ type updateOrCreateLeaderboardEntryType = {
   dateDisplay: string;
   rank: schema.ScoreRankNameType;
   gameVersion: schema.GameVersion;
-  nSubmittedWords: number;
+  submittedWords: string[];
   pangramFound: boolean;
 };
 
@@ -24,7 +24,7 @@ export const updateOrCreateLeaderboardEntry = cache(
     rank,
     gameVersion,
     dateDisplay,
-    nSubmittedWords,
+    submittedWords,
     pangramFound,
   }: updateOrCreateLeaderboardEntryType) => {
     const leaderboardEntry = await db.query.leaderboard.findFirst({
@@ -45,7 +45,8 @@ export const updateOrCreateLeaderboardEntry = cache(
         score,
         rank,
         gameVersion,
-        nSubmittedWords,
+        submittedWords,
+        nSubmittedWords: submittedWords.length,
         pangramFound,
       });
       await db
@@ -54,7 +55,8 @@ export const updateOrCreateLeaderboardEntry = cache(
           username,
           rank,
           score,
-          nSubmittedWords,
+          submittedWords,
+          nSubmittedWords: submittedWords.length,
           pangramFound,
         })
         .where(and(eq(schema.leaderboard.id, leaderboardEntry.id)));
@@ -66,7 +68,8 @@ export const updateOrCreateLeaderboardEntry = cache(
         score,
         rank,
         gameVersion,
-        nSubmittedWords,
+        submittedWords,
+        nSubmittedWords: submittedWords.length,
         pangramFound,
       });
       await db.insert(schema.leaderboard).values({
@@ -76,7 +79,8 @@ export const updateOrCreateLeaderboardEntry = cache(
         rank,
         dateDisplay,
         gameVersion,
-        nSubmittedWords,
+        submittedWords,
+        nSubmittedWords: submittedWords.length,
         pangramFound,
       });
     }
@@ -86,3 +90,18 @@ export const updateOrCreateLeaderboardEntry = cache(
     revalidate: 5,
   },
 );
+
+export const getUserLeaderboardEntries = async (
+  userId: string,
+  gameVersion: schema.GameVersion,
+  dateDisplay: string,
+) => {
+  return await db.query.leaderboard.findMany({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.userId, userId),
+        operators.eq(fields.gameVersion, gameVersion),
+        operators.eq(fields.dateDisplay, dateDisplay),
+      ),
+  });
+};
