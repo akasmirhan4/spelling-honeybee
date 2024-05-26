@@ -69,6 +69,6 @@ export const updateOrCreateLeaderboardEntry = cache(
   },
   ["/play", "updateOrCreateLeaderboardEntry"],
   {
-    revalidate: 60,
+    revalidate: 5,
   },
 );
