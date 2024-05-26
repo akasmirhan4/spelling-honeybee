@@ -25,7 +25,6 @@ import SignInButton from "./SignInButton";
 
 export default function LeaderboardButton({}) {
   const gameVersion = useSearchParams().get("NYT") === "true" ? "NYT" : "AK";
-  console.log({ gameVersionRoot: gameVersion });
   return (
     <Dialog>
       <Tooltip>

@@ -31,7 +31,6 @@ type LeaderboardTableProps = {
 export default async function LeaderboardTable({
   gameVersion,
 }: LeaderboardTableProps) {
-  console.log({ gameVersion });
   const leaderboard = await getLeaderboard(gameVersion);
   return (
     <Table>

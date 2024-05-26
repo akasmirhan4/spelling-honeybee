@@ -77,16 +77,6 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
     }
     if (!user.user) return;
 
-    console.log({ user });
-    console.log({
-      username: user.user?.username ?? "anonymous",
-      score: _score,
-      rank: _rank?.rank ?? "Beginner",
-      gameVersion,
-      nSubmittedWords: words.length,
-      pangramFound,
-    });
-
     if (gameVersion === "NYT" && !!game.NYTGameData) {
       updateOrCreateLeaderboardEntry({
         userId: user.user.id,
@@ -101,11 +91,6 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         console.log("Leaderboard updated");
       });
     } else if (gameVersion === "AK" && !!game.AKGameData) {
-      console.log({
-        game: game.AKGameData,
-        displayDate: game.AKGameData.displayDate,
-        displayDateType: typeof game.AKGameData.displayDate,
-      });
       updateOrCreateLeaderboardEntry({
         userId: user.user.id,
         username: user.user.username ?? "anonymous",

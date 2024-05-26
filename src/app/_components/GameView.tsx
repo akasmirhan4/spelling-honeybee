@@ -65,7 +65,6 @@ export default function GameView({ gameData }: GameViewProps) {
       }
     } else {
       const data = gameData.AK;
-      console.log({ data, displayDateType: typeof data.displayDate });
       setOuterLetters(data.outerLetters);
       setCenterLetter(data.centerLetter);
       setValidLetters(data.validLetters);
@@ -153,13 +152,6 @@ export default function GameView({ gameData }: GameViewProps) {
     }
     setTextInput("");
   };
-
-  useEffect(() => {
-    console.log({
-      game,
-      isValid: (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData),
-    });
-  }, [game.AKGameData, game.NYTGameData]);
 
   return (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">

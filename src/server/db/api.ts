@@ -27,15 +27,6 @@ export const updateOrCreateLeaderboardEntry = cache(
     nSubmittedWords,
     pangramFound,
   }: updateOrCreateLeaderboardEntryType) => {
-    console.log({
-      userId,
-      username,
-      score,
-      rank,
-      gameVersion,
-      nSubmittedWords,
-      pangramFound,
-    });
     const leaderboardEntry = await db.query.leaderboard.findFirst({
       where: (fields, operators) =>
         operators.and(
@@ -44,9 +35,19 @@ export const updateOrCreateLeaderboardEntry = cache(
           operators.eq(fields.gameVersion, gameVersion),
         ),
     });
+    console.log("Found leaderboard entry");
     console.log({ leaderboardEntry });
     if (!!leaderboardEntry) {
       console.log("updating...");
+      console.log({
+        userId,
+        username,
+        score,
+        rank,
+        gameVersion,
+        nSubmittedWords,
+        pangramFound,
+      });
       await db
         .update(schema.leaderboard)
         .set({
@@ -59,6 +60,15 @@ export const updateOrCreateLeaderboardEntry = cache(
         .where(and(eq(schema.leaderboard.id, leaderboardEntry.id)));
     } else {
       console.log("inserting...");
+      console.log({
+        userId,
+        username,
+        score,
+        rank,
+        gameVersion,
+        nSubmittedWords,
+        pangramFound,
+      });
       await db.insert(schema.leaderboard).values({
         userId,
         username,
