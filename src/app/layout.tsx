@@ -5,6 +5,7 @@ import GameProvider from "./_components/GameProvider";
 import { Toaster } from "react-hot-toast";
 import { CSPostHogProvider } from "./_analytics/provider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { TooltipProvider } from "~/components/ui/tooltip";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,12 +26,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <CSPostHogProvider>
-        <html lang="en">
-          <body className={`font-sans ${inter.variable}`}>
-            <GameProvider>{children}</GameProvider>
-            <Toaster />
-          </body>
-        </html>
+        <TooltipProvider>
+          <html lang="en">
+            <body className={`font-sans ${inter.variable}`}>
+              <GameProvider>{children}</GameProvider>
+              <Toaster />
+            </body>
+          </html>
+        </TooltipProvider>
       </CSPostHogProvider>
     </ClerkProvider>
   );

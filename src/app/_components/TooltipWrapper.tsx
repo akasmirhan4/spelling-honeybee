@@ -9,15 +9,13 @@ export function TooltipWrapper({
   trigger,
   content,
 }: {
-  trigger: React.ReactNode;
-  content: React.ReactNode;
+  trigger: JSX.Element;
+  content: JSX.Element;
 }) {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>{trigger}</TooltipTrigger>
-        <TooltipContent>{content}</TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+      <TooltipContent>{content}</TooltipContent>
+    </Tooltip>
   );
 }

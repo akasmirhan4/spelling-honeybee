@@ -14,6 +14,7 @@ import Confetti from "../_components/Confetti";
 import { Button } from "~/components/ui/button";
 import { GameContext } from "../_components/GameProvider";
 import { getGameDataAK, getGameDataNYT } from "../api/game";
+import { DateToStringFormatter } from "~/lib/formatter";
 
 // TODO:
 // - shake animation when word is not valid
@@ -29,17 +30,12 @@ export default function PlayPage() {
   const [isConfettiVisible, setIsConfettiVisible] = useState(false);
   const game = useContext(GameContext);
 
-  
   const playNYT = useSearchParams().get("NYT") === "true";
 
   useEffect(() => {
     setSubmittedWords([]);
     game.setSubmittedWords([]);
-    const date = new Date().toLocaleDateString("en-SG", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const date = DateToStringFormatter(new Date());
     const displayDate = localStorage.getItem("displayDate");
     if (!displayDate) {
       localStorage.setItem("displayDate", date);
@@ -105,11 +101,7 @@ export default function PlayPage() {
 
   const onSubmitWord = async () => {
     if (!textInput) return;
-    const date = new Date().toLocaleDateString("en-SG", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    const date = DateToStringFormatter(new Date());
 
     const errors = [];
 
@@ -159,6 +151,7 @@ export default function PlayPage() {
             _submittedWords.join(","),
           );
         }
+        // All else, word is valid
 
         // check if word is pangram
         if (new Set(_textInput).size == 7) {
@@ -264,7 +257,7 @@ function Loading() {
     <div className="my-8 flex flex-col items-center justify-center">
       <svg
         aria-hidden="true"
-        className="dark:yellow/50 fill-yellow size-12 animate-spin text-gray-200"
+        className="dark:yellow/50 size-12 animate-spin fill-yellow text-gray-200"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +274,7 @@ function Loading() {
       <div>
         {/* Make a loading text that load one letter at a time */}
         <div className="inline-block">
-          <div className="animate-type mt-4 overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
+          <div className="mt-4 animate-type overflow-hidden whitespace-nowrap text-lg font-bold text-gray-400">
             Loading...
           </div>
         </div>

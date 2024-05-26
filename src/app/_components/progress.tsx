@@ -2,6 +2,10 @@
 
 import { useContext, useEffect, useState } from "react";
 import { GameContext } from "./GameProvider";
+import { updateOrCreateLeaderboardEntry } from "~/server/db/api";
+import { useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { DateToStringFormatter } from "~/lib/formatter";
 
 type ProgressProps = {
   answers: string[];
@@ -39,6 +43,9 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
   const [rank, setRank] = useState<ScoreRankName>("Beginner");
   const [progressLeftPosition, setProgressLeftPosition] = useState(0);
   const game = useContext(GameContext);
+  const gameVersion = useSearchParams().get("NYT") === "true" ? "NYT" : "AK";
+  const pangramFound = words.some((word) => new Set(word).size === 7);
+  const user = useUser();
 
   useEffect(() => {
     const _totalScore = calculateTotalScore();
@@ -69,7 +76,39 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         (getRankNumber(_score) / (minScoreRank.length - 1)) * 100;
       setProgressLeftPosition(_leftPosition);
     }
-  }, [words, minScoreRank]);
+    if (!user.user) return;
+
+    console.log({
+      username: user.user?.username ?? "anonymous",
+      score: _score,
+      rank: _rank?.rank ?? "Beginner",
+      gameVersion,
+      nSubmittedWords: words.length,
+      pangramFound,
+    });
+
+    if (gameVersion === "NYT" && !!game.NYTGameData) {
+      updateOrCreateLeaderboardEntry({
+        username: user.user?.username ?? "anonymous",
+        score: _score,
+        rank: _rank?.rank ?? "Beginner",
+        gameVersion,
+        dateDisplay: DateToStringFormatter(game.NYTGameData.displayDate),
+        nSubmittedWords: words.length,
+        pangramFound,
+      });
+    } else if (gameVersion === "AK" && !!game.AKGameData) {
+      updateOrCreateLeaderboardEntry({
+        username: user.user?.username ?? "anonymous",
+        score: _score,
+        rank: _rank?.rank ?? "Beginner",
+        gameVersion,
+        dateDisplay: DateToStringFormatter(game.AKGameData.displayDate),
+        nSubmittedWords: words.length,
+        pangramFound,
+      });
+    }
+  }, [words, minScoreRank, user.user?.username]);
 
   const calculateTotalScore = () => {
     const totalScore = answers.reduce(reduceCalculateScore, 0);
@@ -125,7 +164,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
           }}
         >
           {/* progress value */}
-          <span className="bg-yellow absolute flex h-full w-full items-center justify-center rounded-[50%] text-xs">
+          <span className="absolute flex h-full w-full items-center justify-center rounded-[50%] bg-yellow text-xs">
             {score}
           </span>
         </div>

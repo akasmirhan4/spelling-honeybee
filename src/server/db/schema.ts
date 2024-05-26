@@ -7,6 +7,7 @@ import {
   integer,
   pgEnum,
   boolean,
+  text,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator(
@@ -34,8 +35,8 @@ export type GameVersion = (typeof GameVersion)[number];
 export const rankEnum = pgEnum("rank", ScoreRankName);
 export const gameVersionEnum = pgEnum("game_version", GameVersion);
 
-export const userScore = createTable(
-  "user_score",
+export const leaderboard = createTable(
+  "leaderboard",
   {
     id: serial("id").primaryKey(),
     username: varchar("username", {
@@ -43,6 +44,7 @@ export const userScore = createTable(
     }).notNull(),
     score: integer("score").notNull(),
     rank: rankEnum("rank").notNull(),
+    dateDisplay: text("date_display").notNull(),
     gameVersion: gameVersionEnum("game_version").notNull(),
     nSubmittedWords: integer("n_submitted_words").notNull(),
     pangramFound: boolean("pangram_found").notNull(),

@@ -8,15 +8,12 @@ import path from "path";
 import { load } from "cheerio";
 import axios from "axios";
 import { isText } from "domhandler";
+import { DateToStringFormatter } from "~/lib/formatter";
 
 const getRandomNumber = () => {
   const date = new Date();
   // get dd/mm/yyyy in en-SG
-  const dateString = date.toLocaleDateString("en-SG", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const dateString = DateToStringFormatter(date);
   const secret = env.SECRET_STRING;
   const seedString = `${dateString}-${secret}`;
   const hash = crypto

@@ -8,5 +8,6 @@ export default {
   dbCredentials: {
     url: env.POSTGRES_URL,
   },
+  schemaFilter: ["public"],
   tablesFilter: ["spelling-honeybee_*"],
 } satisfies Config;

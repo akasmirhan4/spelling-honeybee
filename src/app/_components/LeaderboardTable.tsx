@@ -8,7 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { cache } from "~/lib/cache";
 import { db } from "~/server/db";
+
+const getLeaderboard = cache(
+  (gameVersion: "AK" | "NYT") => {
+    const leaderboard = db.query.leaderboard.findMany({
+      where: (data, { eq }) => eq(data.gameVersion, gameVersion),
+      orderBy: (data, { asc }) => asc(data.score),
+    });
+    return leaderboard;
+  },
+  ["/play", "getLeaderboard"],
+);
 
 type LeaderboardTableProps = {
   gameVersion: "AK" | "NYT";
@@ -16,10 +28,7 @@ type LeaderboardTableProps = {
 export default async function LeaderboardTable({
   gameVersion,
 }: LeaderboardTableProps) {
-  const leaderboard = await db.query.userScore.findMany({
-    where: (data, { eq }) => eq(data.gameVersion, gameVersion),
-    orderBy: (data, { asc }) => asc(data.score),
-  });
+  console.log({ gameVersion });
   return (
     <Table>
       <TableHeader>
@@ -31,7 +40,7 @@ export default async function LeaderboardTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {leaderboard.map((user) => (
+        {(await getLeaderboard(gameVersion)).map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.username}</TableCell>
             <TableCell>{`${user.rank} (${user.score})`}</TableCell>

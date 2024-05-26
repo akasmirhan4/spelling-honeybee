@@ -14,7 +14,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import LeaderboardTable from "./LeaderboardTable";
@@ -26,20 +25,19 @@ import SignInButton from "./SignInButton";
 
 export default function LeaderboardButton({}) {
   const gameVersion = useSearchParams().get("NYT") === "true" ? "NYT" : "AK";
+  console.log({ gameVersionRoot: gameVersion });
   return (
     <Dialog>
-      <TooltipProvider>
-        <Tooltip>
-          <DialogTrigger asChild>
-            <TooltipTrigger asChild>
-              <Button onClick={() => {}} variant="ghost">
-                <BarChartBig size={24} />
-              </Button>
-            </TooltipTrigger>
-          </DialogTrigger>
-          <TooltipContent>Leaderboard</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <DialogTrigger asChild>
+          <TooltipTrigger asChild>
+            <Button onClick={() => {}} variant="ghost">
+              <BarChartBig size={24} />
+            </Button>
+          </TooltipTrigger>
+        </DialogTrigger>
+        <TooltipContent>Leaderboard</TooltipContent>
+      </Tooltip>
       <DialogContent className="md:min-w-[48em]" aria-modal>
         <SignedIn>
           <DialogHeader>

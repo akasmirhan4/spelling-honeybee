@@ -20,7 +20,7 @@ export function LeaderboardTableSkeleton() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.from({ length: 5 }).map((_, index) => (
+        {Array.from({ length: 3 }).map((_, index) => (
           <TableRow key={index}>
             <TableCell className="font-medium">
               <Skeleton className="h-4 w-[10em] rounded" />
