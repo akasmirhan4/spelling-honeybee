@@ -31,7 +31,7 @@ export default function LeaderboardButton({}) {
       <Tooltip>
         <DialogTrigger asChild>
           <TooltipTrigger asChild>
-            <Button onClick={() => {}} variant="ghost">
+            <Button variant="ghost">
               <BarChartBig size={24} />
             </Button>
           </TooltipTrigger>

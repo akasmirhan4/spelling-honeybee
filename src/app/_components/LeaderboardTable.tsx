@@ -20,6 +20,9 @@ const getLeaderboard = cache(
     return leaderboard;
   },
   ["/play", "getLeaderboard"],
+  {
+    revalidate: 10,
+  },
 );
 
 type LeaderboardTableProps = {

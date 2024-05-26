@@ -24,7 +24,7 @@ export function GameInput({
   const handleKeyPress = (e: KeyboardEvent, textInput: string) => {
     const target = e.target as HTMLElement;
     // if ariaModal is true, return
-    if (target.ariaModal || target.getAttribute("aria-modal")) return;
+    if (target.ariaModal && target.getAttribute("aria-modal")) return;
     // if backspace, remove last letter
     if (e.key === "Backspace") {
       textInput = textInput.slice(0, -1);

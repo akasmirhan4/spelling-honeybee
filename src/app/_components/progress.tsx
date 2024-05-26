@@ -96,6 +96,8 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         dateDisplay: DateToStringFormatter(game.NYTGameData.displayDate),
         nSubmittedWords: words.length,
         pangramFound,
+      }).then(() => {
+        console.log("Leaderboard updated");
       });
     } else if (gameVersion === "AK" && !!game.AKGameData) {
       updateOrCreateLeaderboardEntry({
@@ -106,6 +108,8 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         dateDisplay: DateToStringFormatter(game.AKGameData.displayDate),
         nSubmittedWords: words.length,
         pangramFound,
+      }).then(() => {
+        console.log("Leaderboard updated");
       });
     }
   }, [words, minScoreRank, user.user?.username]);

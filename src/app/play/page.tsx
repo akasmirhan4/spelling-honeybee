@@ -48,13 +48,17 @@ export default function PlayPage() {
     }
     if (playNYT) {
       if (!game.NYTGameData) {
-        getGameDataNYT().then((data: GameData) => {
-          setOuterLetters(data.outerLetters);
-          setCenterLetter(data.centerLetter);
-          setValidLetters(data.validLetters);
-          setAnswers(data.answers);
-          game.setNYTGameData(data);
-        });
+        getGameDataNYT()
+          .then((data: GameData) => {
+            setOuterLetters(data.outerLetters);
+            setCenterLetter(data.centerLetter);
+            setValidLetters(data.validLetters);
+            setAnswers(data.answers);
+            game.setNYTGameData(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
         setOuterLetters(game.NYTGameData.outerLetters);
         setCenterLetter(game.NYTGameData.centerLetter);
@@ -70,13 +74,17 @@ export default function PlayPage() {
       }
     } else {
       if (!game.AKGameData) {
-        getGameDataAK().then((data: GameData) => {
-          setOuterLetters(data.outerLetters);
-          setCenterLetter(data.centerLetter);
-          setValidLetters(data.validLetters);
-          setAnswers(data.answers);
-          game.setAKGameData(data);
-        });
+        getGameDataAK()
+          .then((data: GameData) => {
+            setOuterLetters(data.outerLetters);
+            setCenterLetter(data.centerLetter);
+            setValidLetters(data.validLetters);
+            setAnswers(data.answers);
+            game.setAKGameData(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
         setOuterLetters(game.AKGameData.outerLetters);
         setCenterLetter(game.AKGameData.centerLetter);
@@ -165,7 +173,7 @@ export default function PlayPage() {
     setTextInput("");
   };
 
-  return (!playNYT && game.AKGameData) || (playNYT && game.NYTGameData) ? (
+  return (!playNYT && game.AKGameData) ?? (playNYT && game.NYTGameData) ? (
     <div className="flex w-full flex-col justify-center md:flex-row-reverse">
       <div className="flex w-full flex-col md:w-3/5">
         <Progress words={submittedWords} answers={answers} />
