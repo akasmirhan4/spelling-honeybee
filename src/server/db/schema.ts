@@ -39,6 +39,7 @@ export const leaderboard = createTable(
   "leaderboard",
   {
     id: serial("id").primaryKey(),
+    userId: text("user_id").notNull(),
     username: varchar("username", {
       length: 20,
     }).notNull(),

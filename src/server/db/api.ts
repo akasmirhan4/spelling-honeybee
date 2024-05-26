@@ -6,6 +6,7 @@ import { db } from ".";
 import { cache } from "~/lib/cache";
 
 type updateOrCreateLeaderboardEntryType = {
+  userId: string;
   username: string;
   score: number;
   dateDisplay: string;
@@ -17,6 +18,7 @@ type updateOrCreateLeaderboardEntryType = {
 
 export const updateOrCreateLeaderboardEntry = cache(
   async ({
+    userId,
     username,
     score,
     rank,
@@ -26,6 +28,7 @@ export const updateOrCreateLeaderboardEntry = cache(
     pangramFound,
   }: updateOrCreateLeaderboardEntryType) => {
     console.log({
+      userId,
       username,
       score,
       rank,
@@ -36,7 +39,7 @@ export const updateOrCreateLeaderboardEntry = cache(
     const leaderboardEntry = await db.query.leaderboard.findFirst({
       where: (fields, operators) =>
         operators.and(
-          operators.eq(fields.username, username),
+          operators.eq(fields.userId, userId),
           operators.eq(fields.dateDisplay, dateDisplay),
           operators.eq(fields.gameVersion, gameVersion),
         ),
@@ -47,21 +50,17 @@ export const updateOrCreateLeaderboardEntry = cache(
       await db
         .update(schema.leaderboard)
         .set({
+          username,
           rank,
           score,
           nSubmittedWords,
           pangramFound,
         })
-        .where(
-          and(
-            eq(schema.leaderboard.username, username),
-            eq(schema.leaderboard.gameVersion, gameVersion),
-            eq(schema.leaderboard.dateDisplay, dateDisplay),
-          ),
-        );
+        .where(and(eq(schema.leaderboard.id, leaderboardEntry.id)));
     } else {
       console.log("inserting...");
       await db.insert(schema.leaderboard).values({
+        userId,
         username,
         score,
         rank,

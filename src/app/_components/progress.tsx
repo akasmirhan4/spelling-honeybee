@@ -77,6 +77,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
     }
     if (!user.user) return;
 
+    console.log({ user });
     console.log({
       username: user.user?.username ?? "anonymous",
       score: _score,
@@ -88,7 +89,8 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
 
     if (gameVersion === "NYT" && !!game.NYTGameData) {
       updateOrCreateLeaderboardEntry({
-        username: user.user?.username ?? "anonymous",
+        userId: user.user.id,
+        username: user.user.username ?? "anonymous",
         score: _score,
         rank: _rank?.rank ?? "Beginner",
         gameVersion,
@@ -105,7 +107,8 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         displayDateType: typeof game.AKGameData.displayDate,
       });
       updateOrCreateLeaderboardEntry({
-        username: user.user?.username ?? "anonymous",
+        userId: user.user.id,
+        username: user.user.username ?? "anonymous",
         score: _score,
         rank: _rank?.rank ?? "Beginner",
         gameVersion,
@@ -116,7 +119,7 @@ export function Progress({ answers, words }: ProgressProps): JSX.Element {
         console.log("Leaderboard updated");
       });
     }
-  }, [words, minScoreRank, user.user?.username]);
+  }, [words, minScoreRank, user.user]);
 
   const calculateTotalScore = () => {
     const totalScore = answers.reduce(reduceCalculateScore, 0);
