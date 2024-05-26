@@ -55,6 +55,14 @@ export default function GameView({ gameData }: GameViewProps) {
       setValidLetters(data.validLetters);
       setAnswers(data.answers);
       game.setNYTGameData(data);
+
+      const NYTSubmittedWords = localStorage.getItem(
+        "NYTSubmittedWords" + date,
+      );
+      if (NYTSubmittedWords) {
+        setSubmittedWords(NYTSubmittedWords.split(","));
+        game.setSubmittedWords(NYTSubmittedWords.split(","));
+      }
     } else {
       const data = gameData.AK;
       console.log({ data, displayDateType: typeof data.displayDate });
@@ -63,16 +71,12 @@ export default function GameView({ gameData }: GameViewProps) {
       setValidLetters(data.validLetters);
       setAnswers(data.answers);
       game.setAKGameData(data);
-    }
-    const NYTSubmittedWords = localStorage.getItem("NYTSubmittedWords" + date);
-    if (NYTSubmittedWords) {
-      setSubmittedWords(NYTSubmittedWords.split(","));
-      game.setSubmittedWords(NYTSubmittedWords.split(","));
-    }
-    const AKSubmittedWords = localStorage.getItem("AKSubmittedWords" + date);
-    if (AKSubmittedWords) {
-      setSubmittedWords(AKSubmittedWords.split(","));
-      game.setSubmittedWords(AKSubmittedWords.split(","));
+
+      const AKSubmittedWords = localStorage.getItem("AKSubmittedWords" + date);
+      if (AKSubmittedWords) {
+        setSubmittedWords(AKSubmittedWords.split(","));
+        game.setSubmittedWords(AKSubmittedWords.split(","));
+      }
     }
   }, [playNYT]);
 
