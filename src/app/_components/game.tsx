@@ -1,3 +1,5 @@
+"use server";
+
 import * as crypto from "crypto";
 import { env } from "~/env";
 import { promises as fs } from "fs";
@@ -44,7 +46,7 @@ export async function getGameDataAK() {
   const { randInt, date } = getRandomNumber();
   const filename = "valid_games.json";
   // const filepath = path.join(process.cwd(), filename);
-  const filepath = path.resolve(process.cwd(), filename);
+  const filepath = path.resolve(process.cwd(), "src", "app", "json", filename);
   console.log({ filepath });
   // read file
   const data = await fs.readFile(filepath, "utf8");

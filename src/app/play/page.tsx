@@ -13,7 +13,7 @@ import { LettersGrid } from "../_components/letters-grid";
 import Confetti from "../_components/Confetti";
 import { Button } from "~/components/ui/button";
 import { GameContext } from "../_components/GameProvider";
-import { getGameDataAK, getGameDataNYT } from "../api/game";
+import { getGameDataAK, getGameDataNYT } from "../_components/game";
 import { DateToStringFormatter } from "~/lib/formatter";
 
 // TODO:
