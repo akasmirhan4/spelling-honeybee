@@ -254,8 +254,10 @@ export default function GameView({ gameData }: GameViewProps) {
         setRank(_rank.rank);
         game.setRank(_rank.rank);
 
-        if (!isSignedIn) return;
-        if (!isLoaded) return;
+        if (!isSignedIn || !isLoaded) {
+          setTextInput("");
+          return;
+        }
         if (gameVersion === "NYT") {
           updateOrCreateLeaderboardEntry({
             userId: user.id,
