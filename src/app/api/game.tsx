@@ -46,6 +46,7 @@ export async function getGameDataAK() {
   const { randInt, date } = getRandomNumber();
   const filename = "output_selected_games.json";
   const filepath = path.join(process.cwd(), "python", "output", filename);
+  console.log({ filepath });
   // read file
   const data = fs.readFileSync(filepath, "utf8");
   const JSONdata = JSON.parse(data) as WordSearchResults;
@@ -80,6 +81,7 @@ export async function getGameDataAK() {
 }
 
 export async function getGameDataNYT() {
+  console.log("Getting game data from NYT");
   const url = "https://www.nytimes.com/puzzles/spelling-bee";
 
   const response = await axios.get<string, Text>(url);
@@ -125,6 +127,6 @@ export async function getGameDataNYT() {
   gameData.validLetters = gameData.validLetters.map((letter) =>
     letter.toUpperCase(),
   );
-
+  console.log({ gameData });
   return gameData;
 }
