@@ -2,7 +2,7 @@
 
 import * as crypto from "crypto";
 import { env } from "~/env";
-import fs from "fs";
+import { promises as fs } from "fs";
 import type { GameData } from "~/types";
 import path from "path";
 import { load } from "cheerio";
@@ -48,7 +48,7 @@ export async function getGameDataAK() {
   const filepath = path.join(process.cwd(), "python", "output", filename);
   console.log({ filepath });
   // read file
-  const data = fs.readFileSync(filepath, "utf8");
+  const data = await fs.readFile(filepath, "utf8");
   const JSONdata = JSON.parse(data) as WordSearchResults;
   const games = Object.values(JSONdata);
 
