@@ -1,5 +1,3 @@
-"use server";
-
 import * as crypto from "crypto";
 import { env } from "~/env";
 import { promises as fs } from "fs";
