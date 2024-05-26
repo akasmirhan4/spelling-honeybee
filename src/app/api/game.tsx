@@ -44,8 +44,8 @@ type NYTOutputs = Record<"today" | "yesterday" | "pastPuzzles", NYTOutput>;
 
 export async function getGameDataAK() {
   const { randInt, date } = getRandomNumber();
-  const filename = "output_selected_games.json";
-  const filepath = path.join(process.cwd(), "python", "output", filename);
+  const filename = "valid_games.json";
+  const filepath = path.join(process.cwd(), filename);
   console.log({ filepath });
   // read file
   const data = await fs.readFile(filepath, "utf8");
