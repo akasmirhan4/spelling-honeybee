@@ -5,7 +5,6 @@ import ShareButton from "../_components/ShareButton";
 import LeaderboardButton from "../_components/LeaderboardButton";
 import { Button } from "~/components/ui/button";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { TooltipWrapper } from "../_components/TooltipWrapper";
 import SignInButton from "../_components/SignInButton";
 
 export default function PlayLayout({
@@ -26,26 +25,18 @@ function Navbar() {
     <nav className="fixed top-0 z-50 flex h-12 w-full items-center justify-center border border-gray-300 bg-white">
       <div className="mx-2 flex h-full w-full justify-between md:container">
         <div className="flex h-full flex-1 items-center gap-0">
-          <TooltipWrapper
-            trigger={
-              <Button asChild variant="ghost">
-                <Link href="/">
-                  <LucideHome size={24} />
-                </Link>
-              </Button>
-            }
-            content={<p>Home</p>}
-          />
-          <TooltipWrapper
-            trigger={<NYTButton />}
-            content={<p>Switch Mode</p>}
-          />
+          <Button asChild variant="ghost">
+            <Link href="/">
+              <LucideHome size={24} />
+            </Link>
+          </Button>
+          <NYTButton />
         </div>
         <div className="flex h-full flex-1 items-center justify-end gap-0">
-          <TooltipWrapper trigger={<ShareButton />} content={<p>Share</p>} />
+          <ShareButton />
           <LeaderboardButton />
           <SignedOut>
-            <SignInButton variant="icon"/>
+            <SignInButton variant="icon" />
           </SignedOut>
           <SignedIn>
             <div className="mx-2 flex">

@@ -10,11 +10,17 @@ import {
 } from "~/components/ui/table";
 import { cache } from "~/lib/cache";
 import { db } from "~/server/db";
+import { GameVersion } from "~/server/db/schema";
 
 const getLeaderboard = cache(
-  (gameVersion: "AK" | "NYT") => {
+  (gameVersion: GameVersion, dateDisplay: string) => {
+    console.log("Fetching leaderboard");
     const leaderboard = db.query.leaderboard.findMany({
-      where: (data, { eq }) => eq(data.gameVersion, gameVersion),
+      where: (data, { eq, and }) =>
+        and(
+          eq(data.gameVersion, gameVersion),
+          eq(data.dateDisplay, dateDisplay),
+        ),
       orderBy: (data, { desc }) => desc(data.score),
     });
     return leaderboard;
@@ -26,12 +32,14 @@ const getLeaderboard = cache(
 );
 
 type LeaderboardTableProps = {
-  gameVersion: "AK" | "NYT";
+  gameVersion: GameVersion;
+  dateDisplay: string;
 };
 export default async function LeaderboardTable({
   gameVersion,
+  dateDisplay,
 }: LeaderboardTableProps) {
-  const leaderboard = await getLeaderboard(gameVersion);
+  const leaderboard = await getLeaderboard(gameVersion, dateDisplay);
   return (
     <Table>
       <TableHeader>

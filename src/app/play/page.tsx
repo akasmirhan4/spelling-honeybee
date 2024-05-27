@@ -11,6 +11,8 @@ import axios from "axios";
 import { load } from "cheerio";
 import { isText } from "domhandler";
 
+export const revalidate = 60;
+
 const getRandomNumber = () => {
   const date = new Date();
   // get dd/mm/yyyy in en-SG
@@ -90,7 +92,7 @@ const getGameDataAK = cache(
   },
   ["/play", "getGameDataAK"],
   {
-    revalidate: 60 * 60 * 24,
+    revalidate: 60,
   },
 );
 
@@ -149,7 +151,7 @@ const getGameDataNYT = cache(
   },
   ["/play", "getGameDataNYT"],
   {
-    revalidate: 60 * 60 * 24,
+    revalidate: 60,
   },
 );
 
