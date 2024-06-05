@@ -18,12 +18,6 @@ export default function ShareButton() {
     (word) => new Set(word).size === 7,
   );
 
-  const displayDate = gameData?.displayDate.toLocaleDateString("en-SG", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-
   return !gameData ? (
     <Skeleton className="mx-1 h-10 w-14 rounded" />
   ) : (
@@ -31,8 +25,8 @@ export default function ShareButton() {
       variant="ghost"
       onClick={async () => {
         const shareData: ShareData = {
-          title: `${title} (${displayDate})`,
-          text: `*${title}*\n*${displayDate}*\n🏅 ${game.rank} (${game.score})\n📃 ${game.submittedWords.length} words\n🎉 ${isPangramFound ? "✅" : "❌"}`,
+          title: `${title} (${gameData?.displayDate})`,
+          text: `*${title}*\n*${gameData?.displayDate}*\n🏅 ${game.rank} (${game.score})\n📃 ${game.submittedWords.length} words\n🎉 ${isPangramFound ? "✅" : "❌"}`,
         };
         if (navigator.share && navigator.canShare(shareData)) {
           await navigator.share(shareData);

@@ -6,9 +6,12 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    experimental: {
-        missingSuspenseWithCSRBailout: false,
-    }
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default config;

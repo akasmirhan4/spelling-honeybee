@@ -5,7 +5,8 @@ const config = {
     "project": true
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "drizzle"
   ],
   "extends": [
     "next/core-web-vitals",
@@ -35,6 +36,22 @@ const config = {
         "checksVoidReturn": {
           "attributes": false
         }
+      }
+    ],
+    "drizzle/enforce-delete-with-where": [
+      "error",
+      {
+        "drizzleObjectName": [
+          "db"
+        ]
+      }
+    ],
+    "drizzle/enforce-update-with-where": [
+      "error",
+      {
+        "drizzleObjectName": [
+          "db"
+        ]
       }
     ]
   }
