@@ -274,7 +274,7 @@ export default function GameView({ gameData }: GameViewProps) {
             console.log("Leaderboard updated");
           });
         } else if (gameVersion === "AK") {
-          const pangramFound = submittedWords.some(
+          const pangramFound = _submittedWords.some(
             (word) => new Set(word).size == 7,
           );
           updateOrCreateLeaderboardEntry({
